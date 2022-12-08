@@ -1,0 +1,154 @@
+# https://konpyutaika.github.io/nifikop/docs/5_references/1_nifi_cluster/
+apiVersion: nifi.konpyutaika.com/v1
+kind: NifiCluster
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  nodeUserIdentityTemplate: {{ .Release.Name }}-node-%d
+  service:
+    headlessEnabled: true
+  zkAddress: {{ .Release.Name }}-zookeeper:2181
+  zkPath: /{{ .Release.Name }}
+  clusterImage: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+  initContainerImage: bash:5.2.2
+  oneNifiNodePerNode: false
+  managedAdminUsers:
+    - identity: {{ .Values.admin.identity }}
+      name: {{ .Values.admin.name }}
+  readOnlyConfig:
+    nifiProperties:
+      webProxyHosts:
+        - {{ .Values.dnsName }}
+      overrideConfigs: |
+        nifi.sensitive.props.key={{ .Values.nifiSensitivePropsKey }}
+        nifi.security.user.oidc.discovery.url={{ .Values.oidc.discoveryUrl }}
+        nifi.security.user.oidc.client.id={{ .Values.oidc.clientId }}
+        nifi.security.user.oidc.client.secret={{ .Values.oidc.secret }}
+        nifi.security.identity.mapping.pattern.dn=CN=([^,]*)(?:, (?:O|OU)=.*)?
+        nifi.security.identity.mapping.value.dn=$1
+        nifi.security.identity.mapping.transform.dn=NONE
+  nodeConfigGroups:
+    default_group:
+      podMetadata:
+        labels:
+          nifi_nodegroup: default
+      imagePullPolicy: IfNotPresent
+      isNode: true
+      serviceAccountName: default
+      storageConfigs:
+        - mountPath: {{ .Values.persistence.logs.path }}
+          name: logs
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.logs.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.logs.size }}
+        - mountPath: {{ .Values.persistence.data.path }}
+          name: data
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.data.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.data.size }}
+        - mountPath: {{ .Values.persistence.flowFileRepo.path }}
+          name: flowfile-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.flowFileRepo.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.flowFileRepo.size }}
+        - mountPath: {{ .Values.persistence.conf.path }}
+          name: conf
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.conf.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.conf.size }}
+        - mountPath: {{ .Values.persistence.contentRepo.path }}
+          name: content-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.contentRepo.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.contentRepo.size }}
+        - mountPath: {{ .Values.persistence.provenanceRepo.path }}
+          name: provenance-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.provenanceRepo.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.provenanceRepo.size }}
+        - mountPath: {{ .Values.persistence.extensionsRepo.path }}
+          name: extensions-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: {{ .Values.persistence.extensionsRepo.storageClass }}
+            resources:
+              requests:
+                storage: {{ .Values.persistence.extensionsRepo.size }}
+      resourcesRequirements:
+        limits:
+          cpu:  {{ .Values.resources.limits.cpu }}
+          memory: {{ .Values.resources.limits.memory }}
+          ephemeral-storage: {{ .Values.resources.limits.storage }}
+        requests:
+          cpu:  {{ .Values.resources.requests.cpu }}
+          memory: {{ .Values.resources.requests.memory }}
+          ephemeral-storage: {{ .Values.resources.requests.storage }}
+  nodes:
+  {{- range until (int .Values.nifiNodes) }}
+    - id: {{ . }}
+      nodeConfigGroup: default_group
+  {{- end }}
+  propagateLabels: true
+  nifiClusterTaskSpec:
+    retryDurationMinutes: 10
+  listenersConfig:
+    internalListeners:
+      - containerPort: 8443
+        type: https
+        name: https
+      - containerPort: 6007
+        type: cluster
+        name: cluster
+      - containerPort: 10000
+        type: s2s
+        name: s2s
+      - containerPort: 9090
+        type: prometheus
+        name: prometheus
+      - containerPort: 6342
+        type: load-balance
+        name: load-balance
+    sslSecrets:
+      create: true
+  externalServices:
+    - name: {{ .Release.Name }}-cluster
+      {{- if .Values.ingress.enabled }}
+      metadata:
+        annotations:
+          {{- /* https://cloud.google.com/kubernetes-engine/docs/concepts/ingress-xlb#https_tls_between_load_balancer_and_your_application */}}
+          cloud.google.com/app-protocols: '{"https":"HTTPS"}'
+      {{- end }}
+      spec:
+        {{- if .Values.ingress.enabled }}
+        type: NodePort
+        {{- else }}
+        type: ClusterIP
+        {{- end }}
+        portConfigs:
+          - port: 8443
+            internalListenerName: https

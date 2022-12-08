@@ -1,0 +1,6 @@
+.workspace/
+.idea/
+
+*.tgz
+
+log/

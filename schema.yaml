@@ -1,0 +1,398 @@
+x-google-marketplace:
+  schemaVersion: v2
+  applicationApiVersion: v1beta1
+  publishedVersion: "$TAG"
+  publishedVersionMetadata:
+    releaseNote: >-
+      A regular update.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  images:
+    '':  # Primary image has no name.
+      properties:
+        image.repo:
+          type: REPO_WITH_REGISTRY
+        image.tag:
+          type: TAG
+#    TODO: uncomment me on release (all images needs to be republished with same $TAG)
+#    cert-manager:
+#      properties:
+#        calleido-deps.cert-manager.image.repository:
+#          type: REPO_WITH_REGISTRY
+#        calleido-deps.cert-manager.image.tag:
+#          type: TAG
+#    cert-manager-webhook:
+#      properties:
+#        calleido-deps.cert-manager.webhook.image.repository:
+#          type: REPO_WITH_REGISTRY
+#        calleido-deps.cert-manager.webhook.image.tag:
+#          type: TAG
+#    cert-manager-cainjector:
+#      properties:
+#        calleido-deps.cert-manager.cainjector.image.repository:
+#          type: REPO_WITH_REGISTRY
+#        calleido-deps.cert-manager.cainjector.image.tag:
+#          type: TAG
+#    nifikop:
+#      properties:
+#        calleido-deps.nifikop.image.repository:
+#          type: REPO_WITH_REGISTRY
+#        calleido-deps.nifikop.image.tag:
+#          type: TAG
+#    zookeeper:
+#      properties:
+#        calleido-deps.zookeeper.image.registry:
+#          type: REGISTRY
+#        calleido-deps.zookeeper.image.repository:
+#          type: REPO_WITHOUT_REGISTRY
+#        calleido-deps.zookeeper.image.tag:
+#          type: TAG
+
+  deployerServiceAccount:
+    description: Creates app resources, including Webhooks and ClusterRoleBindings.
+    roles:
+      - type: ClusterRole
+        rulesType: CUSTOM
+        rules:
+          - apiGroups:
+              - 'rbac.authorization.k8s.io'
+            resources:
+              - 'clusterroles'
+              - 'clusterrolebindings'
+            verbs:
+              - '*'
+          - apiGroups:
+              - 'apiextensions.k8s.io'
+            resources:
+              - 'customresourcedefinitions'
+            verbs:
+              - '*'
+          - apiGroups:
+              - 'admissionregistration.k8s.io'
+            resources:
+              - 'mutatingwebhookconfigurations'
+              - 'validatingwebhookconfigurations'
+            verbs:
+              - '*'
+          - apiGroups:
+              - ''
+            resources:
+              - 'namespaces'
+            verbs:
+              - 'create'
+              - 'list'
+              - 'update'
+              - 'patch'
+
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+  nifiNodes:
+    type: integer
+    title: Calleido Nodes
+    description: Number of Calleido nodes
+    default: 1
+    minimum: 1
+  dnsName:
+    type: string
+    title: HTTPS host to whitelist
+    description: HTTPS host from which you will be connecting to the Nifi
+
+  nifiSensitivePropsKey:
+    type: string
+    description: Password used to encrypt any sensitive property values that are configured in processors.
+    x-google-marketplace:
+      type: GENERATED_PASSWORD
+      generatedPassword:
+        length: 10
+        includeSymbols: False
+        base64: False
+
+  admin.identity:
+    type: string
+    title: Admin user ID (email)
+    description: User ID which will be the initial admin of the node
+  admin.name:
+    type: string
+    title: Admin username
+    description: User name which will be the initial admin of the node
+    default: admin
+
+  oidc.discoveryUrl:
+    type: string
+    title: OIDC discovery URL
+    description: OIDC discovery URL
+    default: https://accounts.google.com/.well-known/openid-configuration
+  oidc.clientId:
+    type: string
+    title: OIDC clientId
+    description: OIDC clientId
+  oidc.secret:
+    type: string
+    title: OIDC secret
+    x-google-marketplace:
+      type: MASKED_FIELD
+
+  ingress.enabled:
+    type: boolean
+    title: Ingress enabled
+    description: Create Ingress for external access
+    default: true
+  ingress.staticIpAddressName:
+    type: string
+    title: Google Cloud Static External IP
+    description: Google Cloud Static External IP Address Name - requires Ingress to be enabled
+
+  resources.limits.cpu:
+    type: string
+    default: 750m
+    title: CPU limit for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  resources.limits.memory:
+    type: string
+    default: 2Gi
+    title: Memory limit for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  resources.limits.storage:
+    type: string
+    default: 4Gi
+    title: Ephemeral Storage limit for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  resources.requests.cpu:
+    type: string
+    default: 250m
+    title: CPU requests for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  resources.requests.memory:
+    type: string
+    default: 1Gi
+    title: Memory requests for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  resources.requests.storage:
+    type: string
+    default: 4Gi
+    title: Ephemeral Storage requests for your Calleido node
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+
+#### Nifi nodes storage config ####
+
+  persistence.logs.storageClass:
+    type: string
+    title: Nifi - Storage Class for LOGS volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.logs.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for LOGS volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.logs.path:
+    type: string
+    default: "/opt/nifi/nifi-current/logs"
+    title: Nifi - Storage Path for LOGS volume
+
+  persistence.data.storageClass:
+    type: string
+    title: Nifi - Storage Class for DATA volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.data.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for DATA volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.data.path:
+    type: string
+    default: "/opt/nifi/data"
+    title: Nifi - Storage Path for DATA volume
+
+  persistence.flowFileRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for flowFileRepo volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.flowFileRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for flowFileRepo volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.flowFileRepo.path:
+    type: string
+    default: "/opt/nifi/flowfile_repository"
+    title: Nifi - Storage Path for flowFileRepo volume
+
+  persistence.conf.storageClass:
+    type: string
+    title: Nifi - Storage Class for CONF volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.conf.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for CONF volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.conf.path:
+    type: string
+    default: "/opt/nifi/nifi-current/conf"
+    title: Nifi - Storage Path for CONF volume
+
+  persistence.contentRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Content Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.contentRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Content Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.contentRepo.path:
+    type: string
+    default: "/opt/nifi/content_repository"
+    title: Nifi - Storage Path for Content Repository volume
+
+  persistence.provenanceRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Provenance Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.provenanceRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Provenance Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.provenanceRepo.path:
+    type: string
+    default: "/opt/nifi/provenance_repository"
+    title: Nifi - Storage Path for Provenance Repository volume
+
+  persistence.extensionsRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Extensions Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.extensionsRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Extensions Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.extensionsRepo.path:
+    type: string
+    default: "/opt/nifi/extensions"
+    title: Nifi - Storage Path for Extensions Repository volume
+
+### CERT-MANAGER ###
+
+  calleido-deps.cert-manager.resources.limits.cpu:
+    type: string
+    default: 100m
+    title: CPU limit for Cert-Manager (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.cert-manager.resources.limits.memory:
+    type: string
+    default: 64Mi
+    title: Memory limit for Cert-Manager (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  calleido-deps.cert-manager.resources.requests.cpu:
+    type: string
+    default: 100m
+    title: CPU requests for Cert-Manager (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.cert-manager.resources.requests.memory:
+    type: string
+    default: 64Mi
+    title: Memory requests for Cert-Manager (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+
+  ### Zookeeper ###
+
+  calleido-deps.zookeeper.resources.limits.cpu:
+    type: string
+    default: 250m
+    title: CPU limit for Zookeeper operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.zookeeper.resources.limits.memory:
+    type: string
+    default: 256Mi
+    title: Memory limit for Zookeeper operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  calleido-deps.zookeeper.resources.requests.cpu:
+    type: string
+    default: 250m
+    title: CPU requests for Zookeeper operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.zookeeper.resources.requests.memory:
+    type: string
+    default: 256Mi
+    title: Memory requests for Zookeeper operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+
+  calleido-deps.zookeeper.replicas:
+    type: integer
+    title: Zookeeper Replicas
+    description: Number of ZooKeeper nodes
+    default: 1
+    minimum: 1
+
+  calleido-deps.zookeeper.persistence.storageClass:
+    type: string
+    title: Zookeeper StorageClass
+    description: PVC Storage Class for ZooKeeper data volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  calleido-deps.zookeeper.persistence.size:
+    type: string
+    default: 8Gi
+    title: Zookeeper Storage size for persistent volumes
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+
+  ### nifikop operator ###
+
+  calleido-deps.nifikop.resources.limits.cpu:
+    type: string
+    default: 100m
+    title: CPU limit for Nifikop operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.nifikop.resources.limits.memory:
+    type: string
+    default: 128Mi
+    title: Memory limit for Nifikop operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  calleido-deps.nifikop.resources.requests.cpu:
+    type: string
+    default: 100m
+    title: CPU requests for Nifikop operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([m]?)$'
+  calleido-deps.nifikop.resources.requests.memory:
+    type: string
+    default: 128Mi
+    title: Memory requests for Nifikop operator (dependency component)
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+
+required:
+- name
+- namespace
