@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: securenifi
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/affinity: cookie
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - test.nifikop.calleido.io
+      secretName: nifi-tls
+  rules:
+    - host: test.nifikop.calleido.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nifi-cluster
+                port:
+                  number: 8443

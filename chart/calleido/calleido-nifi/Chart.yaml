@@ -1,0 +1,5 @@
+apiVersion: v2
+name: calleido-nifi
+description: Calleido NiFi cluster
+version: 0.1.0
+icon: https://helm.sh/img/helm.svg

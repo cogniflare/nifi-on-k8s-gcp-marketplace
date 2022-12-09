@@ -1,0 +1,142 @@
+apiVersion: nifi.konpyutaika.com/v1
+kind: NifiCluster
+metadata:
+  name: securenifi
+spec:
+  service:
+    headlessEnabled: true
+  zkAddress: calleido-zookeeper:2181
+  zkPath: /securenifi
+  clusterImage: apache/nifi:1.18.0
+  initContainerImage: bash:5.2.2
+  oneNifiNodePerNode: false
+  managedAdminUsers:
+    - identity: michalkeder@cogniflare.io
+      name: michal
+    - identity: lukasz.borawski@cogniflare.io
+      name: lukasz
+  readOnlyConfig:
+    nifiProperties:
+      webProxyHosts:
+        - test.nifikop.calleido.io:8443
+      overrideConfigs: |
+        nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
+        nifi.security.user.oidc.discovery.url=https://accounts.google.com/.well-known/openid-configuration
+        nifi.security.user.oidc.client.id=229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
+        nifi.security.user.oidc.client.secret=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
+        nifi.security.identity.mapping.pattern.dn=CN=([^,]*)(?:, (?:O|OU)=.*)?
+        nifi.security.identity.mapping.value.dn=$1
+        nifi.security.identity.mapping.transform.dn=NONE
+  nodeConfigGroups:
+    default_group:
+      podMetadata:
+        labels:
+          nifi_nodegroup: default
+      imagePullPolicy: IfNotPresent
+      isNode: true
+      serviceAccountName: default
+      storageConfigs:
+        - mountPath: /opt/nifi/nifi-current/logs
+          name: logs
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/data
+          name: data
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/flowfile_repository
+          name: flowfile-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/nifi-current/conf
+          name: conf
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/content_repository
+          name: content-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/provenance_repository
+          name: provenance-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+        - mountPath: /opt/nifi/extensions
+          name: extensions-repository
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 1Gi
+      resourcesRequirements:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+          ephemeral-storage: 4Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+          ephemeral-storage: 4Gi
+  nodes:
+    - id: 0
+      nodeConfigGroup: default_group
+  propagateLabels: true
+  nifiClusterTaskSpec:
+    retryDurationMinutes: 10
+  listenersConfig:
+    internalListeners:
+      - containerPort: 8443
+        type: https
+        name: https
+      - containerPort: 6007
+        type: cluster
+        name: cluster
+      - containerPort: 10000
+        type: s2s
+        name: s2s
+      - containerPort: 9090
+        type: prometheus
+        name: prometheus
+      - containerPort: 6342
+        type: load-balance
+        name: load-balance
+    sslSecrets:
+      create: true
+  externalServices:
+    - name: nifi-cluster
+      spec:
+        type: ClusterIP
+        portConfigs:
+          - port: 8443
+            internalListenerName: https

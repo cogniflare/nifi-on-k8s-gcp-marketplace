@@ -1,0 +1,19 @@
+{{- if .Values.autoscaling.enabled -}}
+apiVersion: nifi.konpyutaika.com/v1alpha1
+kind: NifiNodeGroupAutoscaler
+metadata:
+  name: securenifi
+  finalizers:
+  - nifinodegroupautoscalers.nifi.konpyutaika.com/finalizer
+spec:
+  clusterRef:
+    name: securenifi
+    namespace: calleido
+  nodeConfigGroupId: default_group
+  nodeLabelsSelector: 
+    matchLabels:
+      nifi_autoscaler: "1"
+  upscaleStrategy: simple
+  downscaleStrategy: lifo
+  replicas: 1 # when replicas==0, HPA scaling is disabled
+{{- end -}}

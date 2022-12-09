@@ -1,0 +1,106 @@
+templates:
+  resources: &autopilot-resources
+    limits:
+      cpu: 250m
+      ephemeral-storage: 1Gi
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      ephemeral-storage: 1Gi
+      memory: 512Mi
+
+cert-manager:
+  installCRDs: false
+  global:
+    leaderElection:
+      namespace: calleido
+  resources: *autopilot-resources
+  webhook:
+    resources: *autopilot-resources
+  cainjector:
+    resources: *autopilot-resources
+  startupapicheck:
+    resources: *autopilot-resources
+
+external-dns:
+  provider: google
+  policy: sync
+  txtOwnerId: nifikop
+  sources:
+    - ingress
+  extraArgs:
+    - --domain-filter=nifikop.calleido.io
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: external-dns-sa@prj-d-sandbox-364708.iam.gserviceaccount.com
+  resources: *autopilot-resources
+
+ingress-nginx:
+  controller:
+    resources: *autopilot-resources
+    admissionWebhooks:
+      createSecretJob:
+        resources: *autopilot-resources
+      patchWebhookJob:
+        resources: *autopilot-resources
+
+kube-prometheus-stack:
+  coreDns:
+    enabled: false
+  kubeControllerManager:
+    enabled: false
+  kubeDns:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+  kubeProxy:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  nodeExporter:
+    enabled: false
+  kubeStateMetrics:
+    enabled: false
+  grafana:
+    enabled: false
+  alertmanager:
+    enabled: false
+  defaultRules:
+    create: false
+  kubeApiServer:
+    enabled: false
+  kubelet:
+    enabled: false
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+  prometheusOperator:
+    resources: *autopilot-resources
+    admissionWebhooks:
+      createSecretJob:
+        resources: *autopilot-resources
+      patch:
+        resources: *autopilot-resources
+
+nifikop:
+  image:
+    repository: gcr.io/prj-d-sandbox-364708/nifikop
+    tag: 1.0.0-0
+  namespaces:
+    - calleido
+  logLevel: Debug
+  resources: *autopilot-resources
+
+prometheus-adapter:
+  rules:
+    default: true
+  prometheus:
+    url: http://prometheus-operated.calleido.svc
+  resources: *autopilot-resources
+
+zookeeper:
+  global:
+    storageClass: standard-rwo
+  networkPolicy:
+    enabled: true
+  resources: *autopilot-resources
