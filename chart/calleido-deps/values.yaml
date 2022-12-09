@@ -8,19 +8,39 @@ templates:
       cpu: 250m
       ephemeral-storage: 1Gi
       memory: 512Mi
+  certManagerResources: &cert-manager-resources
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
 
 cert-manager:
   installCRDs: false
+  image:
+    repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-controller
+    tag: v1.10.1
+
   global:
     leaderElection:
       namespace: calleido
-  resources: *autopilot-resources
+  resources: *cert-manager-resources
   webhook:
-    resources: *autopilot-resources
+    resources: *cert-manager-resources
+    image:
+      repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-webhook
+      tag: v1.10.1
   cainjector:
-    resources: *autopilot-resources
+    resources: *cert-manager-resources
+    image:
+      repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-cainjector
+      tag: v1.10.1
   startupapicheck:
-    resources: *autopilot-resources
+    resources: *cert-manager-resources
+    image:
+      repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-ctl
+      tag: v1.10.1
 
 external-dns:
   provider: google
@@ -84,12 +104,18 @@ kube-prometheus-stack:
 
 nifikop:
   image:
-    repository: gcr.io/prj-d-sandbox-364708/nifikop
-    tag: 1.0.0-0
+    repository: eu.gcr.io/prj-cogniflare-marketpl-public/nifikop/nifikop
+    tag: 1.0.0-cogniflare0
   namespaces:
     - calleido
   logLevel: Debug
-  resources: *autopilot-resources
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
 
 prometheus-adapter:
   rules:
@@ -99,8 +125,18 @@ prometheus-adapter:
   resources: *autopilot-resources
 
 zookeeper:
+  image:
+    registry: eu.gcr.io
+    repository: prj-cogniflare-marketpl-public/zookeeper/zookeeper
+    tag: 3.8.0-debian-11-r56
   global:
     storageClass: standard-rwo
   networkPolicy:
     enabled: true
-  resources: *autopilot-resources
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi

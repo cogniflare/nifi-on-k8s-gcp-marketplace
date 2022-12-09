@@ -17,16 +17,20 @@ spec:
       name: lukasz
   readOnlyConfig:
     nifiProperties:
+      {{- if .Values.ingress.enabled }}
       webProxyHosts:
         - test.nifikop.calleido.io:8443
+      {{- end }}
       overrideConfigs: |
         nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
+      {{- if .Values.ingress.enabled }}
         nifi.security.user.oidc.discovery.url=https://accounts.google.com/.well-known/openid-configuration
         nifi.security.user.oidc.client.id=229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
         nifi.security.user.oidc.client.secret=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
         nifi.security.identity.mapping.pattern.dn=CN=([^,]*)(?:, (?:O|OU)=.*)?
         nifi.security.identity.mapping.value.dn=$1
         nifi.security.identity.mapping.transform.dn=NONE
+      {{- end }}
   nodeConfigGroups:
     default_group:
       podMetadata:
@@ -101,12 +105,12 @@ spec:
                 storage: 1Gi
       resourcesRequirements:
         limits:
-          cpu: "1"
+          cpu: 1000m
           memory: 2Gi
           ephemeral-storage: 4Gi
         requests:
-          cpu: "1"
-          memory: 2Gi
+          cpu: 500m
+          memory: 1Gi
           ephemeral-storage: 4Gi
   nodes:
     - id: 0
@@ -133,6 +137,7 @@ spec:
         name: load-balance
     sslSecrets:
       create: true
+{{- if .Values.ingress.enabled -}}
   externalServices:
     - name: nifi-cluster
       spec:
@@ -140,3 +145,4 @@ spec:
         portConfigs:
           - port: 8443
             internalListenerName: https
+{{- end -}}
