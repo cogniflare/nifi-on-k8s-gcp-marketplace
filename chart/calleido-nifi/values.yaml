@@ -2,3 +2,7 @@ autoscaling:
   enabled: false
 ingress:
   enabled: false
+oidc:
+  enabled: false
+ssl:
+  enabled: false

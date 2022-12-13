@@ -10,11 +10,13 @@ spec:
   clusterImage: apache/nifi:1.18.0
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
+{{- if .Values.oidc.enabled }}
   managedAdminUsers:
     - identity: michalkeder@cogniflare.io
       name: michal
     - identity: lukasz.borawski@cogniflare.io
       name: lukasz
+{{- end }}
   readOnlyConfig:
     nifiProperties:
       {{- if .Values.ingress.enabled }}
@@ -23,7 +25,7 @@ spec:
       {{- end }}
       overrideConfigs: |
         nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
-      {{- if .Values.ingress.enabled }}
+      {{- if .Values.oidc.enabled }}
         nifi.security.user.oidc.discovery.url=https://accounts.google.com/.well-known/openid-configuration
         nifi.security.user.oidc.client.id=229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
         nifi.security.user.oidc.client.secret=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
@@ -120,9 +122,16 @@ spec:
     retryDurationMinutes: 10
   listenersConfig:
     internalListeners:
+      {{- if .Values.ssl.enabled }}
       - containerPort: 8443
         type: https
         name: https
+      {{ else }}
+      - containerPort: 8080
+        type: http
+        name: http
+      {{- end }}
+
       - containerPort: 6007
         type: cluster
         name: cluster
@@ -135,14 +144,23 @@ spec:
       - containerPort: 6342
         type: load-balance
         name: load-balance
+    {{- if .Values.ssl.enabled }}
     sslSecrets:
       create: true
-{{- if .Values.ingress.enabled -}}
+    {{- end }}
   externalServices:
     - name: nifi-cluster
       spec:
+        {{- if .Values.ingress.enabled }}
         type: ClusterIP
+        {{ else }}
+        type: LoadBalancer
+        {{- end }}
         portConfigs:
+          {{- if .Values.ssl.enabled }}
           - port: 8443
             internalListenerName: https
-{{- end -}}
+          {{ else }}
+          - port: 8080
+            internalListenerName: http
+          {{- end }}
