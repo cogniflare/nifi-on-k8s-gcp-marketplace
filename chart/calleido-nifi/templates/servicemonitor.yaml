@@ -1,0 +1,18 @@
+{{- if .Values.autoscaling.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: securenifi
+spec:
+  endpoints:
+  - interval: 10s
+    path: /metrics/
+    port: prometheus
+  namespaceSelector:
+    matchNames:
+    - calleido
+  selector:
+    matchLabels:
+      app: nifi
+      nifi_cr: securenifi
+{{- end -}}
