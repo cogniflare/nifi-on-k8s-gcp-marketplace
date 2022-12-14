@@ -3,3 +3,7 @@ name: calleido-nifi
 description: Calleido NiFi cluster
 version: 0.1.0
 icon: https://helm.sh/img/helm.svg
+dependencies:
+  - name: calleido-deps
+    version: 0.1.0
+    repository: "file://../calleido-deps"
