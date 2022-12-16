@@ -6,3 +6,4 @@ oidc:
   enabled: false
 ssl:
   enabled: false
+image: null

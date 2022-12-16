@@ -5,9 +5,9 @@ metadata:
 spec:
   service:
     headlessEnabled: true
-  zkAddress: calleido-zookeeper:2181
+  zkAddress: {{ .Release.Name }}-zookeeper:2181
   zkPath: /securenifi
-  clusterImage: apache/nifi:1.18.0
+  clusterImage: {{ .Values.image }}
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
 {{- if .Values.oidc.enabled }}

@@ -1,0 +1,8 @@
+actions:
+  - name: Grafana listening
+    bashTest:
+      script: |-
+        curl http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/
+      expect:
+        stdout:
+          contains: 'Flow Configuration History'
