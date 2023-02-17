@@ -13,7 +13,7 @@ x-google-marketplace:
       - Feature
     recommended: True
 
-  images: # TODO: configure all requried images
+  images: # TODO: configure all required images
     '':  # Primary image has no name.
       properties:
         image.repo:

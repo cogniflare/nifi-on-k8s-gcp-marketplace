@@ -26,8 +26,8 @@ spec:
   - name: Application Namespace
     value: {{ .Release.Namespace }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ .Release.Name }}
+    matchExpressions:
+      - { key: app.kubernetes.io/name, operator: In, values: [ '{{ .Release.Name }}', webhook,  cainjector, cert-manager] }
   componentKinds:
     - group: apps/v1
       kind: Deployment
@@ -45,7 +45,11 @@ spec:
       kind: Pod
     - group: v1
       kind: Service
-    - group: v1
-      kind: NifiCluster
+    - group: rbac.authorization.k8s.io/v1
+      kind: Role
+    - group: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
     - group: nifi.konpyutaika.com/v1alpha1
       kind: NifiNodeGroupAutoscaler
+    - group: nifi.konpyutaika.com/v1
+      kind: NifiCluster

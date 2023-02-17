@@ -30,55 +30,33 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 ### Requirements
 1. Setup K8s cluster and connect to it
 2. Install Application CRD: `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
-3. Export ENVs:
-    ```bash
-    export PROJECT_ID=prj-d-sandbox-364708/calleido-nifi
-    export TAG=1.0.0-cogniflare5
-    export DEPLOYER_TAG=0.1.5
-    ```
 
-### Prepare images
+### Release images
 
 Current images path format:
 - main: gcr.io/prj-d-sandbox-364708/calleido-nifi
 - test: gcr.io/prj-d-sandbox-364708/calleido-nifi/tester
 - deployer: gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer
 
-1. Calleido Nifi Controller image
-   Re-tag and push to GCR official Calleido Nifi Controller image:
-    ```bash
-    docker pull --platform linux/amd64 apache/nifi:latest
-    docker tag apache/nifi:latest gcr.io/${PROJECT_ID}:${TAG}
-    docker push gcr.io/${PROJECT_ID}:${TAG}
-    ```
-2. Build App tester image
-    ```bash
-    cd apptest/tester
-    docker buildx build --push --platform linux/amd64 --tag gcr.io/${PROJECT_ID}/tester:${TAG} .
-    ```
-3. Update `TRACK` with `${TAG}` value in [README.MD](Makefile)
-4. Build Deployer image
-    ```bash
-    docker buildx build --push --platform linux/amd64 --build-arg MARKETPLACE_TOOLS_TAG=latest \
-        --build-arg REGISTRY=gcr.io/${PROJECT_ID} \
-        --build-arg TAG=${TAG} \
-        --tag gcr.io/${PROJECT_ID}/deployer:${DEPLOYER_TAG} -f deployer/Dockerfile .
-    ```
+To release new version:
+1. Bump `TAG` in [Makefile](Makefile)
+2. `make release`
 
 ### Run tests on GCP
 
 ### On AMD64 CPU
 1. Test K8s config
     ```bash
-    KUBE_CONFIG=$KUBECONFIG GCLOUD_CONFIG=$CLOUDSDK_CONFIG mpdev doctor
+    make test-doctor
     ```
 2. Test deployer
     ```bash
-    KUBE_CONFIG=$KUBECONFIG GCLOUD_CONFIG=$CLOUDSDK_CONFIG mpdev /scripts/verify --deployer=gcr.io/${PROJECT_ID}/deployer:${DEPLOYER_TAG}
+    make test
     ```
 
 ### On ARM64 CPU
-```shell
+`mpdev` is not available for ARM64 CPU, so we need to run tests in docker container manually:
+```bash
    docker run --platform linux/amd64 --init --net=host \
    --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly \
    --mount type=bind,source=/tmp/logs,target=/logs \
@@ -88,12 +66,5 @@ Current images path format:
    gcloud config set project prj-d-sandbox-364708
    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
    
-   /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${DEPLOYER_TAG}
+   /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
 ```
-
-
-
-
-
-
-
