@@ -42,8 +42,6 @@ spec:
     - group: v1
       kind: Job
     - group: v1
-      kind: Pod
-    - group: v1
       kind: Service
     - group: rbac.authorization.k8s.io/v1
       kind: Role

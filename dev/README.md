@@ -28,7 +28,7 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 ## Build & Test on GCP
 
 ### Requirements
-1. Setup K8s cluster and connect to it
+1. Setup K8s cluster and connect to it (use e2-standart-4 machine type with 1 node)
 2. Install Application CRD: `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
 
 ### Release images

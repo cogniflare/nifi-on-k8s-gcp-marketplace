@@ -1,5 +1,19 @@
 actions:
-  - name: nifi-cluster listening
+  - name: Wait up to 10m for the nifi-cluster to be ready
+    bashTest:
+      script: kubectl wait --for=condition=ready --timeout=600s --namespace $NAMESPACE pod -l app=nifi
+      expect:
+        exitCode:
+          equals: 0
+  - name: wait for nifi-cluster to start serving
+    bashTest:
+      script: |-
+        timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/)" != "200" ]];  do sleep 5; done'
+      expect:
+        exitCode:
+          equals: 0
+
+  - name: check if nifi-cluster is running properly
     bashTest:
       script: |-
         curl http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/
