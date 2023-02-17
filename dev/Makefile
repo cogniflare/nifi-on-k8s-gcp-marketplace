@@ -1,4 +1,4 @@
-TAG := 0.0.3
+TAG := 0.0.4
 PROJECT_ID := prj-d-sandbox-364708/calleido-nifi
 
 release-nifi-calleido:
