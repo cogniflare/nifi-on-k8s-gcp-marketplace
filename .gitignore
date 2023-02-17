@@ -1,5 +1,6 @@
 .workspace/
 .idea/
 
-Chart.lock
 *.tgz
+
+log/
