@@ -1,5 +1,5 @@
 actions:
-  - name: Grafana listening
+  - name: nifi-cluster listening
     bashTest:
       script: |-
         curl http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/

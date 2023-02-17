@@ -7,7 +7,7 @@ spec:
     headlessEnabled: true
   zkAddress: {{ .Release.Name }}-zookeeper:2181
   zkPath: /securenifi
-  clusterImage: {{ .Values.image }}
+  clusterImage: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
 {{- if .Values.oidc.enabled }}
@@ -107,11 +107,11 @@ spec:
                 storage: 1Gi
       resourcesRequirements:
         limits:
-          cpu: 1000m
+          cpu: 750m
           memory: 2Gi
           ephemeral-storage: 4Gi
         requests:
-          cpu: 500m
+          cpu: 250m
           memory: 1Gi
           ephemeral-storage: 4Gi
   nodes:

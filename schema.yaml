@@ -3,7 +3,7 @@ x-google-marketplace:
   applicationApiVersion: v1beta1
 
   clusterConstraints:
-    k8sVersion: ">=1.18.0" # TODO: verify
+    k8sVersion: ">=0.0.1" # TODO: verify
 
   publishedVersion: "$TAG"
   publishedVersionMetadata:
@@ -16,8 +16,10 @@ x-google-marketplace:
   images: # TODO: configure all requried images
     '':  # Primary image has no name.
       properties:
-        image:
-          type: FULL
+        image.repo:
+          type: REPO_WITH_REGISTRY
+        image.tag:
+          type: TAG
 
   deployerServiceAccount:
     description: Creates app resources, including Webhooks and ClusterRoleBindings.

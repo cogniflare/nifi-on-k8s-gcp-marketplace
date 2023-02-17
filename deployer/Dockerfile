@@ -34,15 +34,17 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends dnsutils netcat \
     && rm -rf /var/lib/apt/lists/*
 
-#RUN sed '/^kubectl apply/ikubectl apply -f /data/extracted/calleido-nifi/chart/templates/crds/\n\
-#    kubectl wait --for=condition=Established --timeout=15s crd envoyfilters.networking.istio.io\n\
-#    kubectl wait --for=condition=Established --timeout=15s crd gateways.networking.istio.io\n\
-#    kubectl wait --for=condition=Established --timeout=15s crd images.caching.internal.knative.dev' -i /bin/deploy.sh /bin/deploy_with_tests.sh
+RUN sed '/^kubectl apply/ikubectl apply -f /data/extracted/calleido-nifi/chart/crds/\n\
+    kubectl wait --for=condition=Established --timeout=15s crd clusterissuers.cert-manager.io\n\
+    kubectl wait --for=condition=Established --timeout=15s crd nificlusters.nifi.konpyutaika.com' -i /bin/deploy.sh /bin/deploy_with_tests.sh
+
+RUN sed '/--namespace="$NAMESPACE"/c\    --namespace="$NAMESPACE" --set-string calleido-deps.nifikop.namespaces={"$NAMESPACE"} --set-string calleido-deps.cert-manager.global.leaderElection.namespace="$NAMESPACE" \\' -i /bin/create_manifests.sh
+
 
 COPY --from=build /tmp/calleido-nifi.tar.gz /data/chart/
 COPY --from=build /tmp/test/calleido-nifi.tar.gz /data-test/chart/
 COPY --from=build /tmp/apptest/schema.yaml /data-test/
 COPY --from=build /tmp/schema.yaml /data/
 
-ENV WAIT_FOR_READY_TIMEOUT 1800
-ENV TESTER_TIMEOUT 1800
+ENV WAIT_FOR_READY_TIMEOUT 600
+ENV TESTER_TIMEOUT 600

@@ -7,14 +7,12 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 1.18.0
-
-# TODO - shouldn't we push it to the marketplace registry? "SOURCE_REGISTRY ?= marketplace.gcr.io/google"
-SOURCE_REGISTRY ?= apache
-IMAGE_NIFI = $(SOURCE_REGISTRY)/nifi:$(TRACK)
+TRACK ?= 1.0.0-cogniflare3
+SOURCE_REGISTRY ?= gcr.io/prj-d-sandbox-364708/calleido-nifi
+IMAGE_MAIN = $(SOURCE_REGISTRY):$(TRACK)
 
 # Main image
-image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_NIFI))
+image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_MAIN))
 
 C2D_CONTAINER_RELEASE := $(call get_c2d_release,$(image-$(CHART_NAME)))
 
