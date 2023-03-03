@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: securenifi
+  annotations:
+    cert-manager.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: nifikop
+spec:
+  tls:
+    - hosts:
+        - test.nifikop.calleido.io
+      secretName: nifi-ssl
+  defaultBackend:
+    service:
+      name: nifi-cluster
+      port:
+        number: 8443

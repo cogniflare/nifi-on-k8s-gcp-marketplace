@@ -5,10 +5,10 @@ ingress:
 oidc:
   enabled: false
 ssl:
-  enabled: false
+  enabled: true
 image:
-  repo: null
-  tag: null
+  repo: apache/nifi
+  tag: 1.18.0
 
 templates:
   resources: &autopilot-resources
