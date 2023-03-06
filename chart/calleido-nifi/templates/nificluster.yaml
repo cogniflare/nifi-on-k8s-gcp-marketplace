@@ -1,29 +1,26 @@
 apiVersion: nifi.konpyutaika.com/v1
 kind: NifiCluster
 metadata:
-  name: securenifi
+  name: {{ .Release.Name }}
 spec:
   service:
     headlessEnabled: true
   zkAddress: {{ .Release.Name }}-zookeeper:2181
-  zkPath: /securenifi
+  zkPath: /calleido-nifi
   clusterImage: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
   managedAdminUsers:
-    - identity: michalkeder@cogniflare.io
-      name: michal
-    - identity: lukasz.borawski@cogniflare.io
-      name: lukasz
+  {{- .Values.initialAdminUsers | toYaml | nindent 4 }}
   readOnlyConfig:
     nifiProperties:
       webProxyHosts:
-        - test.nifikop.calleido.io:8443
+        - {{ .Values.dnsName }}
       overrideConfigs: |
-        nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
-        nifi.security.user.oidc.discovery.url=https://accounts.google.com/.well-known/openid-configuration
-        nifi.security.user.oidc.client.id=229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
-        nifi.security.user.oidc.client.secret=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
+        nifi.sensitive.props.key={{ .Values.nifiSensitivePropsKey }}
+        nifi.security.user.oidc.discovery.url={{ .Values.oidc.discoveryUrl }}
+        nifi.security.user.oidc.client.id={{ .Values.oidc.clientId }}
+        nifi.security.user.oidc.client.secret={{ .Values.oidc.secret }}
         nifi.security.identity.mapping.pattern.dn=CN=([^,]*)(?:, (?:O|OU)=.*)?
         nifi.security.identity.mapping.value.dn=$1
         nifi.security.identity.mapping.transform.dn=NONE
@@ -109,22 +106,18 @@ spec:
           memory: 1Gi
           ephemeral-storage: 4Gi
   nodes:
-    - id: 0
+  {{- range until (int .Values.nifiNodes) }}
+    - id: {{ . }}
       nodeConfigGroup: default_group
+  {{- end }}
   propagateLabels: true
   nifiClusterTaskSpec:
     retryDurationMinutes: 10
   listenersConfig:
     internalListeners:
-      {{- if .Values.ssl.enabled }}
       - containerPort: 8443
         type: https
         name: https
-      {{ else }}
-      - containerPort: 8080
-        type: http
-        name: http
-      {{- end }}
       - containerPort: 6007
         type: cluster
         name: cluster
@@ -137,22 +130,15 @@ spec:
       - containerPort: 6342
         type: load-balance
         name: load-balance
-    {{- if .Values.ssl.enabled }}
     sslSecrets:
       create: true
-    {{- end }}
   externalServices:
-    - name: nifi-cluster
+    - name: {{ .Release.Name }}-cluster
       metadata:
         annotations:
           cloud.google.com/app-protocols: '{"https":"HTTPS"}'
       spec:
         type: NodePort
         portConfigs:
-          {{- if .Values.ssl.enabled }}
           - port: 8443
             internalListenerName: https
-          {{ else }}
-          - port: 8080
-            internalListenerName: http
-          {{- end }}

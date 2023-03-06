@@ -1,32 +1,26 @@
-autoscaling:
-  enabled: false
-ingress:
-  enabled: false
-oidc:
-  enabled: false
-ssl:
-  enabled: true
 image:
   repo: apache/nifi
-  tag: 1.18.0
+  tag: 1.20.0
 
-templates:
-  resources: &autopilot-resources
-    limits:
-      cpu: 250m
-      ephemeral-storage: 1Gi
-      memory: 512Mi
-    requests:
-      cpu: 250m
-      ephemeral-storage: 1Gi
-      memory: 512Mi
-  certManagerResources: &cert-manager-resources
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 50m
-      memory: 64Mi
+dnsName: test.nifikop.calleido.io
+staticIpAddressName: nifikop # Google Cloud Static External IP Address Name
+
+initialAdminUsers:
+  - identity: michalkeder@cogniflare.io
+    name: michal
+  - identity: lukasz.borawski@cogniflare.io
+    name: lukasz
+  - identity: jakub@cogniflare.io
+    name: jakub
+
+oidc: # Google Cloud OAuth 2.0 Client ID for Web Application
+  discoveryUrl: https://accounts.google.com/.well-known/openid-configuration
+  clientId: 229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
+  secret: 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
+
+nifiSensitivePropsKey: thisIsABadSensitiveKeyPassword # https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#security_properties
+
+nifiNodes: 1
 
 calleido-deps:
   cert-manager:
@@ -38,7 +32,13 @@ calleido-deps:
     global:
       leaderElection:
         namespace: calleido
-    resources: *cert-manager-resources
+    resources: &cert-manager-resources
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
     webhook:
       resources: *cert-manager-resources
       image:
@@ -51,66 +51,6 @@ calleido-deps:
         tag: v1.10.1
     startupapicheck:
       enabled: false
-
-  external-dns:
-    provider: google
-    policy: sync
-    txtOwnerId: nifikop
-    sources:
-      - ingress
-    extraArgs:
-      - --domain-filter=nifikop.calleido.io
-    serviceAccount:
-      annotations:
-        iam.gke.io/gcp-service-account: external-dns-sa@prj-d-sandbox-364708.iam.gserviceaccount.com
-    resources: *autopilot-resources
-
-  ingress-nginx:
-    controller:
-      resources: *autopilot-resources
-      admissionWebhooks:
-        createSecretJob:
-          resources: *autopilot-resources
-        patchWebhookJob:
-          resources: *autopilot-resources
-
-  kube-prometheus-stack:
-    coreDns:
-      enabled: false
-    kubeControllerManager:
-      enabled: false
-    kubeDns:
-      enabled: false
-    kubeEtcd:
-      enabled: false
-    kubeProxy:
-      enabled: false
-    kubeScheduler:
-      enabled: false
-    nodeExporter:
-      enabled: false
-    kubeStateMetrics:
-      enabled: false
-    grafana:
-      enabled: false
-    alertmanager:
-      enabled: false
-    defaultRules:
-      create: false
-    kubeApiServer:
-      enabled: false
-    kubelet:
-      enabled: false
-    prometheus:
-      prometheusSpec:
-        serviceMonitorSelectorNilUsesHelmValues: false
-    prometheusOperator:
-      resources: *autopilot-resources
-      admissionWebhooks:
-        createSecretJob:
-          resources: *autopilot-resources
-        patch:
-          resources: *autopilot-resources
 
   nifikop:
     image:
@@ -127,20 +67,14 @@ calleido-deps:
         cpu: 50m
         memory: 64Mi
 
-  prometheus-adapter:
-    rules:
-      default: true
-    prometheus:
-      url: http://prometheus-operated.calleido.svc
-    resources: *autopilot-resources
-
   zookeeper:
     image:
       registry: eu.gcr.io
       repository: prj-cogniflare-marketpl-public/zookeeper/zookeeper
       tag: 3.8.0-debian-11-r56
-    global:
+    persistence:
       storageClass: standard-rwo
+      size: 8Gi
     networkPolicy:
       enabled: true
     resources:
