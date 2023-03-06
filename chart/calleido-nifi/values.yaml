@@ -28,27 +28,32 @@ calleido-deps:
     image:
       repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-controller
       tag: v1.10.1
-
+    extraArgs:
+      - --namespace=calleido
+    replicaCount: 1
     global:
       leaderElection:
         namespace: calleido
-    resources: &cert-manager-resources
+    resources:
       limits:
         cpu: 100m
-        memory: 128Mi
+        memory: 64Mi
       requests:
-        cpu: 50m
+        cpu: 100m
         memory: 64Mi
     webhook:
-      resources: *cert-manager-resources
+      resources:
+        limits:
+          cpu: 50m
+          memory: 32Mi
+        requests:
+          cpu: 50m
+          memory: 32Mi
       image:
         repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-webhook
         tag: v1.10.1
     cainjector:
-      resources: *cert-manager-resources
-      image:
-        repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-cainjector
-        tag: v1.10.1
+      enabled: false
     startupapicheck:
       enabled: false
 
@@ -64,8 +69,8 @@ calleido-deps:
         cpu: 100m
         memory: 128Mi
       requests:
-        cpu: 50m
-        memory: 64Mi
+        cpu: 100m
+        memory: 128Mi
 
   zookeeper:
     image:
@@ -79,8 +84,8 @@ calleido-deps:
       enabled: true
     resources:
       limits:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 250m
+        memory: 256Mi
       requests:
-        cpu: 50m
-        memory: 64Mi
+        cpu: 250m
+        memory: 256Mi
