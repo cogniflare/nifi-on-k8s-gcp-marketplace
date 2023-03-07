@@ -1,5 +1,5 @@
 image:
-  repo: apache/nifi
+  repo: eu.gcr.io/prj-cogniflare-marketpl-public/apache/nifi
   tag: 1.20.0
 
 dnsName: test.nifikop.calleido.io
