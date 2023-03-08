@@ -2,8 +2,11 @@ image:
   repo: eu.gcr.io/prj-cogniflare-marketpl-public/apache/nifi
   tag: 1.20.0
 
-dnsName: test.nifikop.calleido.io
-staticIpAddressName: nifikop # Google Cloud Static External IP Address Name
+dnsName: test.nifikop.calleido.io # whitelisted in Nifi cluster
+
+ingress:
+  enabled: true
+  staticIpAddressName: nifikop # Google Cloud Static External IP Address Name
 
 initialAdminUsers:
   - identity: michalkeder@cogniflare.io

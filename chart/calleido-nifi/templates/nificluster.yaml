@@ -135,11 +135,18 @@ spec:
       create: true
   externalServices:
     - name: {{ .Release.Name }}-cluster
+      {{- if .Values.ingress.enabled }}
       metadata:
         annotations:
+          {{- /* https://cloud.google.com/kubernetes-engine/docs/concepts/ingress-xlb#https_tls_between_load_balancer_and_your_application */}}
           cloud.google.com/app-protocols: '{"https":"HTTPS"}'
+      {{- end }}
       spec:
+        {{- if .Values.ingress.enabled }}
         type: NodePort
+        {{- else }}
+        type: ClusterIP
+        {{- end }}
         portConfigs:
           - port: 8443
             internalListenerName: https
