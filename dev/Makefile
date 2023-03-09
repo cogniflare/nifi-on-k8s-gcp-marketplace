@@ -1,4 +1,4 @@
-TAG := 0.0.4
+TAG := 0.0.11
 PROJECT_ID := prj-d-sandbox-364708/calleido-nifi
 
 release-nifi-calleido:
@@ -17,6 +17,10 @@ release-deployer:
 
 release: release-nifi-calleido release-tester release-deployer
 	@sed -i '/TRACK ?=/c\TRACK ?= $(TAG)' ../Makefile
+
+update-chart:
+	@cd ../chart/calleido-deps && helm dependency update
+	@cd ../chart/calleido-nifi && helm dependency update
 
 test-doctor:
 	KUBE_CONFIG=$KUBECONFIG GCLOUD_CONFIG=$CLOUDSDK_CONFIG mpdev doctor

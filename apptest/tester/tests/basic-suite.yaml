@@ -1,8 +1,8 @@
 actions:
-  - name: Wait up to 10m for nifi-cluster to start serving
+  - name: Wait up to 10m for nifi-cluster to start serving ($TEST_HOST service)
     bashTest:
       script: |-
-        timeout 600 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/)" != "200" ]];  do sleep 5; done'
+        timeout 600 bash -c 'while [[ "$(curl -s -k -o /dev/null -w ''%{http_code}'' $TEST_HOST)" != "200" ]];  do sleep 5; done'
       expect:
         exitCode:
           equals: 0
@@ -10,7 +10,7 @@ actions:
   - name: Check if nifi-cluster is running properly
     bashTest:
       script: |-
-        curl http://nifi-cluster.$NAMESPACE.svc.cluster.local:8080/nifi/
+        curl -k $TEST_HOST
       expect:
         stdout:
           contains: 'Flow Configuration History'

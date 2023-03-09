@@ -2,12 +2,13 @@
 apiVersion: nifi.konpyutaika.com/v1
 kind: NifiCluster
 metadata:
-  name: {{ .Release.Name }}
+  name: calleido
 spec:
+  nodeUserIdentityTemplate: calleido-node-%d
   service:
     headlessEnabled: true
   zkAddress: {{ .Release.Name }}-zookeeper:2181
-  zkPath: /calleido-nifi
+  zkPath: /calleido
   clusterImage: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
@@ -134,7 +135,7 @@ spec:
     sslSecrets:
       create: true
   externalServices:
-    - name: {{ .Release.Name }}-cluster
+    - name: calleido-cluster
       {{- if .Values.ingress.enabled }}
       metadata:
         annotations:

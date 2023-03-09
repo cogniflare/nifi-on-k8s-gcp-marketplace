@@ -27,4 +27,6 @@ spec:
           fieldPath: metadata.namespace
     - name: APP_INSTANCE_NAME
       value: {{ .Release.Name }}
+    - name: TEST_HOST
+      value: https://calleido-headless:8443/nifi/
   restartPolicy: Never

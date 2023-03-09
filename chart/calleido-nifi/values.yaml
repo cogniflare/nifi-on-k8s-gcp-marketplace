@@ -5,7 +5,7 @@ image:
 dnsName: test.nifikop.calleido.io # whitelisted in Nifi cluster
 
 ingress:
-  enabled: true
+  enabled: false
   staticIpAddressName: nifikop # Google Cloud Static External IP Address Name
 
 initialAdminUsers:

@@ -12,7 +12,7 @@ metadata:
 spec:
   defaultBackend:
     service:
-      name: {{ .Release.Name }}-cluster
+      name: calleido-cluster
       port:
         number: 8443
 {{- end }}

@@ -28,7 +28,7 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 ## Build & Test on GCP
 
 ### Requirements
-1. Setup K8s cluster and connect to it (use e2-standart-4 machine type with 1 node)
+1. Setup K8s cluster and connect to it (use e2-standard-4 machine type with 1 node)
 2. Install Application CRD: `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
 
 ### Release images
@@ -59,7 +59,7 @@ To release new version:
 ```bash
    docker run --platform linux/amd64 --init --net=host \
    --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly \
-   --mount type=bind,source=/tmp/logs,target=/logs \
+   --mount type=bind,source=$(pwd)/log,target=/logs \
    -it --rm gcr.io/cloud-marketplace-tools/k8s/dev:latest bash
    
    gcloud auth login
