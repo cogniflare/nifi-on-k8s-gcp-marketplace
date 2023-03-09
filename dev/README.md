@@ -68,3 +68,10 @@ To release new version:
    
    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
 ```
+
+## Manual cleanup in case of error
+```bash
+k patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge calleido
+k patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge  calleido-controller
+k patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge calleido.managed-admins
+```

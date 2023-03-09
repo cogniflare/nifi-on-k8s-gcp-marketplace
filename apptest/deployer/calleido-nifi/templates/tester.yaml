@@ -26,7 +26,7 @@ spec:
         fieldRef:
           fieldPath: metadata.namespace
     - name: APP_INSTANCE_NAME
-      value: {{ .Release.Name }}
+      value: "{{ .Release.Name }}"
     - name: TEST_HOST
-      value: https://calleido-headless:8443/nifi/
+      value: "https://{{ .Release.Name }}-headless:8443/nifi/"
   restartPolicy: Never

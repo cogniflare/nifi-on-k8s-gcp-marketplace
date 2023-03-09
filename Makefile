@@ -7,7 +7,7 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 0.0.11
+TRACK ?= 0.0.13
 SOURCE_REGISTRY ?= gcr.io/prj-d-sandbox-364708/calleido-nifi
 IMAGE_MAIN = $(SOURCE_REGISTRY):$(TRACK)
 
