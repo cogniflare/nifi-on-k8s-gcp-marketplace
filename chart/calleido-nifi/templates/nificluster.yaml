@@ -35,69 +35,69 @@ spec:
       isNode: true
       serviceAccountName: default
       storageConfigs:
-        - mountPath: /opt/nifi/nifi-current/logs
+        - mountPath: {{ .Values.persistence.logs.path }}
           name: logs
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.logs.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/data
+                storage: {{ .Values.persistence.logs.size }}
+        - mountPath: {{ .Values.persistence.data.path }}
           name: data
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.data.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/flowfile_repository
+                storage: {{ .Values.persistence.data.size }}
+        - mountPath: {{ .Values.persistence.flowFileRepo.path }}
           name: flowfile-repository
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.flowFileRepo.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/nifi-current/conf
+                storage: {{ .Values.persistence.flowFileRepo.size }}
+        - mountPath: {{ .Values.persistence.conf.path }}
           name: conf
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.conf.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/content_repository
+                storage: {{ .Values.persistence.conf.size }}
+        - mountPath: {{ .Values.persistence.contentRepo.path }}
           name: content-repository
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.contentRepo.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/provenance_repository
+                storage: {{ .Values.persistence.contentRepo.size }}
+        - mountPath: {{ .Values.persistence.provenanceRepo.path }}
           name: provenance-repository
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.provenanceRepo.storageClass }}
             resources:
               requests:
-                storage: 1Gi
-        - mountPath: /opt/nifi/extensions
+                storage: {{ .Values.persistence.provenanceRepo.size }}
+        - mountPath: {{ .Values.persistence.extensionsRepo.path }}
           name: extensions-repository
           pvcSpec:
             accessModes:
               - ReadWriteOnce
-            storageClassName: standard-rwo
+            storageClassName: {{ .Values.persistence.extensionsRepo.storageClass }}
             resources:
               requests:
-                storage: 1Gi
+                storage: {{ .Values.persistence.extensionsRepo.size }}
       resourcesRequirements:
         limits:
           cpu:  {{ .Values.resources.limits.cpu }}

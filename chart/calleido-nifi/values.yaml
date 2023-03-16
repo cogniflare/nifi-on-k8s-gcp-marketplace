@@ -35,6 +35,35 @@ resources:
     memory: 1Gi
     storage: 4Gi
 
+persistence:
+  logs:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/nifi-current/logs"
+  data:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/data"
+  flowFileRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/flowfile_repository"
+  conf:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/nifi-current/conf"
+  contentRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/content_repository"
+  provenanceRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/provenance_repository"
+  extensionsRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/extensions"
 
 calleido-deps:
   cert-manager:

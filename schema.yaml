@@ -109,6 +109,127 @@ properties:
     title: Ephemeral Storage requests for your Calleido node
     pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
 
+#### Nifi nodes storage config ####
+
+  persistence.logs.storageClass:
+    type: string
+    title: Nifi - Storage Class for LOGS volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.logs.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for LOGS volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.logs.path:
+    type: string
+    default: "/opt/nifi/nifi-current/logs"
+    title: Nifi - Storage Path for LOGS volume
+
+  persistence.data.storageClass:
+    type: string
+    title: Nifi - Storage Class for DATA volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.data.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for DATA volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.data.path:
+    type: string
+    default: "/opt/nifi/data"
+    title: Nifi - Storage Path for DATA volume
+
+  persistence.flowFileRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for flowFileRepo volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.flowFileRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for flowFileRepo volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.flowFileRepo.path:
+    type: string
+    default: "/opt/nifi/flowfile_repository"
+    title: Nifi - Storage Path for flowFileRepo volume
+
+  persistence.conf.storageClass:
+    type: string
+    title: Nifi - Storage Class for CONF volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.conf.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for CONF volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.conf.path:
+    type: string
+    default: "/opt/nifi/nifi-current/conf"
+    title: Nifi - Storage Path for CONF volume
+
+  persistence.contentRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Content Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.contentRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Content Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.contentRepo.path:
+    type: string
+    default: "/opt/nifi/content_repository"
+    title: Nifi - Storage Path for Content Repository volume
+
+  persistence.provenanceRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Provenance Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.provenanceRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Provenance Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.provenanceRepo.path:
+    type: string
+    default: "/opt/nifi/provenance_repository"
+    title: Nifi - Storage Path for Provenance Repository volume
+
+  persistence.extensionsRepo.storageClass:
+    type: string
+    title: Nifi - Storage Class for Extensions Repository volume
+    x-google-marketplace:
+      type: STORAGE_CLASS
+      storageClass:
+        type: SSD
+  persistence.extensionsRepo.size:
+    type: string
+    default: 1Gi
+    title: Nifi - Storage Size for Extensions Repository volume
+    pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
+  persistence.extensionsRepo.path:
+    type: string
+    default: "/opt/nifi/extensions"
+    title: Nifi - Storage Path for Extensions Repository volume
+
 ### CERT-MANAGER ###
 
   calleido-deps.cert-manager.resources.limits.cpu:
