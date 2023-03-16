@@ -29,6 +29,8 @@ spec:
     matchExpressions:
       - { key: app.kubernetes.io/name, operator: In, values: [ '{{ .Release.Name }}', webhook,  cainjector, cert-manager] }
   componentKinds:
+    - group: nifi.konpyutaika.com/v1
+      kind: NifiCluster
     - group: apps/v1
       kind: Deployment
     - group: apps/v1
@@ -47,7 +49,7 @@ spec:
       kind: Role
     - group: rbac.authorization.k8s.io/v1
       kind: RoleBinding
-    - group: nifi.konpyutaika.com/v1alpha1
-      kind: NifiNodeGroupAutoscaler
-    - group: nifi.konpyutaika.com/v1
-      kind: NifiCluster
+    - group: admissionregistration.k8s.io/v1
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io/v1
+      kind: ValidatingWebhookConfiguration

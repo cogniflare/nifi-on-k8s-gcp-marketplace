@@ -100,13 +100,13 @@ spec:
                 storage: 1Gi
       resourcesRequirements:
         limits:
-          cpu: 750m
-          memory: 2Gi
-          ephemeral-storage: 4Gi
+          cpu:  {{ .Values.resources.limits.cpu }}
+          memory: {{ .Values.resources.limits.memory }}
+          ephemeral-storage: {{ .Values.resources.limits.storage }}
         requests:
-          cpu: 250m
-          memory: 1Gi
-          ephemeral-storage: 4Gi
+          cpu:  {{ .Values.resources.requests.cpu }}
+          memory: {{ .Values.resources.requests.memory }}
+          ephemeral-storage: {{ .Values.resources.requests.storage }}
   nodes:
   {{- range until (int .Values.nifiNodes) }}
     - id: {{ . }}

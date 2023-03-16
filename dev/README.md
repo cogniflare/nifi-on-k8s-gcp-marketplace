@@ -66,7 +66,15 @@ To release new version:
    gcloud config set project prj-d-sandbox-364708
    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
    
+   export TAG=0.0.17
+   
+   # run automated tests
    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
+   
+   # run manual deployment
+   kubectl create namespace test-nifi
+   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters='{"name": "test-nifi", "namespace": "test-nifi", "ingress.enabled": true}'
+   kubectl delete applications.app.k8s.io test-nifi
 ```
 
 ## Manual cleanup in case of error

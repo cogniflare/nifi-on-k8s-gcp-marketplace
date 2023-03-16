@@ -25,6 +25,17 @@ nifiSensitivePropsKey: thisIsABadSensitiveKeyPassword # https://nifi.apache.org/
 
 nifiNodes: 1
 
+resources:
+  limits:
+    cpu: 750m
+    memory: 2Gi
+    storage: 4Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi
+    storage: 4Gi
+
+
 calleido-deps:
   cert-manager:
     installCRDs: false
@@ -85,6 +96,7 @@ calleido-deps:
         memory: 128Mi
 
   zookeeper:
+    replicaCount: 1
     image:
       registry: eu.gcr.io
       repository: prj-cogniflare-marketpl-public/zookeeper/zookeeper
