@@ -1,6 +1,6 @@
 image:
-  repo: eu.gcr.io/prj-cogniflare-marketpl-public/apache/nifi
-  tag: 1.20.0
+  repo: null
+  tag: null
 
 dnsName: test.nifikop.calleido.io # whitelisted in Nifi cluster
 

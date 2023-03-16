@@ -7,12 +7,31 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 0.0.20
-SOURCE_REGISTRY ?= gcr.io/prj-d-sandbox-364708/calleido-nifi
-IMAGE_MAIN = $(SOURCE_REGISTRY):$(TRACK)
+TRACK ?= 0.0.22
+
+# SOURCE_REGISTRY ?= marketplace.gcr.io/google
+SOURCE_REGISTRY ?= eu.gcr.io/prj-cogniflare-marketpl-public
+
+# Main image HAS TO BE published always under $SOURCE_REGISTRY/$CHART_NAME
+IMAGE_CALLEIDO_NIFI ?= $(SOURCE_REGISTRY)/calleido-nifi:$(TRACK)
+IMAGE_CERT_MANAGER ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-controller:$(TRACK)
+IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-webhook:$(TRACK)
+IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-cainjector:$(TRACK)
+IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/nifikop/nifikop:$(TRACK)
+IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/zookeeper/zookeeper:$(TRACK)
 
 # Main image
-image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_MAIN))
+image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_CALLEIDO_NIFI))
+
+# List of images used in application
+ADDITIONAL_IMAGES := cert-manager cert-manager-webhook cert-manager-cainjector nifikop zookeeper
+
+# Additional images variable names should correspond with ADDITIONAL_IMAGES list
+image-cert-manager :=  $(call get_sha256,$(IMAGE_CERT_MANAGER))
+image-cert-manager-webhook := $(call get_sha256,$(IMAGE_CERT_MANAGER_WEBHOOK))
+image-cert-manager-cainjector := $(call get_sha256, $(IMAGE_CERT_MANAGER_CAINJECTOR))
+image-nifikop := $(call get_sha256, $(IMAGE_NIFIKOP))
+image-zookeeper := $(call get_sha256,$(IMAGE_ZOOKEEPER))
 
 C2D_CONTAINER_RELEASE := $(call get_c2d_release,$(image-$(CHART_NAME)))
 
