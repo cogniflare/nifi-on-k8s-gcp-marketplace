@@ -14,11 +14,11 @@ SOURCE_REGISTRY ?= eu.gcr.io/prj-cogniflare-marketpl-public
 
 # Main image HAS TO BE published always under $SOURCE_REGISTRY/$CHART_NAME
 IMAGE_CALLEIDO_NIFI ?= $(SOURCE_REGISTRY)/calleido-nifi:$(TRACK)
-IMAGE_CERT_MANAGER ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-controller:$(TRACK)
-IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-webhook:$(TRACK)
-IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/cert-manager/cert-manager-cainjector:$(TRACK)
-IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/nifikop/nifikop:$(TRACK)
-IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/zookeeper/zookeeper:$(TRACK)
+IMAGE_CERT_MANAGER ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-controller:$(TRACK)
+IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-webhook:$(TRACK)
+IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-cainjector:$(TRACK)
+IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/calleido-nifi/nifikop/nifikop:$(TRACK)
+IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/calleido-nifi/zookeeper/zookeeper:$(TRACK)
 
 # Main image
 image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_CALLEIDO_NIFI))
