@@ -13,7 +13,8 @@ spec:
   initContainerImage: bash:5.2.2
   oneNifiNodePerNode: false
   managedAdminUsers:
-  {{- .Values.initialAdminUsers | toYaml | nindent 4 }}
+    - identity: {{ .Values.admin.identity }}
+      name: {{ .Values.admin.name }}
   readOnlyConfig:
     nifiProperties:
       webProxyHosts:

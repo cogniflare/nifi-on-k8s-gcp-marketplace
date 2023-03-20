@@ -6,15 +6,12 @@ dnsName: test.nifikop.calleido.io # whitelisted in Nifi cluster
 
 ingress:
   enabled: false
-  staticIpAddressName: nifikop # Google Cloud Static External IP Address Name
+  # Google Cloud Static External IP Address Name
+  staticIpAddressName: nifikop
 
-initialAdminUsers:
-  - identity: michalkeder@cogniflare.io
-    name: michal
-  - identity: lukasz.borawski@cogniflare.io
-    name: lukasz
-  - identity: jakub@cogniflare.io
-    name: jakub
+admin:
+  identity:
+  name:
 
 oidc: # Google Cloud OAuth 2.0 Client ID for Web Application
   discoveryUrl: https://accounts.google.com/.well-known/openid-configuration

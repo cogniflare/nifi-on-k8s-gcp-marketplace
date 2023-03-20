@@ -95,17 +95,62 @@ properties:
     type: string
     x-google-marketplace:
       type: NAMESPACE
-  ingress.enabled:
-    type: boolean
-    title: Create Ingress
-    description: Create Ingress for external access
-    default: false
   nifiNodes:
     type: integer
     title: Calleido Nodes
     description: Number of Calleido nodes
     default: 1
     minimum: 1
+  dnsName:
+    type: string
+    title: HTTPS host to whitelist
+    description: HTTPS host from which you will be connecting to the Nifi
+
+  nifiSensitivePropsKey:
+    type: string
+    description: Password used to encrypt any sensitive property values that are configured in processors.
+    x-google-marketplace:
+      type: GENERATED_PASSWORD
+      generatedPassword:
+        length: 10
+        includeSymbols: False
+        base64: False
+
+  admin.identity:
+    type: string
+    title: Admin user ID (email)
+    description: User ID which will be the initial admin of the node
+  admin.name:
+    type: string
+    title: Admin username
+    description: User name which will be the initial admin of the node
+    default: admin
+
+  oidc.discoveryUrl:
+    type: string
+    title: OIDC discovery URL
+    description: OIDC discovery URL
+    default: https://accounts.google.com/.well-known/openid-configuration
+  oidc.clientId:
+    type: string
+    title: OIDC clientId
+    description: OIDC clientId
+
+  oidc.secret:
+    type: string
+    title: OIDC secret
+    x-google-marketplace:
+      type: MASKED_FIELD
+
+  ingress.enabled:
+    type: boolean
+    title: Ingress enabled
+    description: Create Ingress for external access
+    default: false
+  ingress.staticIpAddressName:
+    type: string
+    title: Google Cloud Static External IP
+    description: Google Cloud Static External IP Address Name - requires Ingress to be enabled
 
   resources.limits.cpu:
     type: string
