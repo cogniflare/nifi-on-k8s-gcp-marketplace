@@ -4,3 +4,25 @@ properties:
     default: $REGISTRY/tester:$TAG
     x-google-property:
       type: IMAGE
+  ingress.enabled:
+    type: boolean
+    title: Ingress enabled
+    default: false
+  dnsName:
+    type: string
+    title: HTTPS host to whitelist
+    default: "test.nifikop.calleido.io"
+  admin.identity:
+    type: string
+    title: Admin user ID (email)
+    default: "jakub@cogniflare.io"
+  oidc.clientId:
+    type: string
+    title: OIDC clientId
+    default: "xxx.apps.googleusercontent.com"
+  oidc.secret:
+    type: string
+    title: OIDC secret
+    default: "xxx"
+    x-google-marketplace:
+      type: MASKED_FIELD

@@ -135,7 +135,6 @@ properties:
     type: string
     title: OIDC clientId
     description: OIDC clientId
-
   oidc.secret:
     type: string
     title: OIDC secret
@@ -146,7 +145,7 @@ properties:
     type: boolean
     title: Ingress enabled
     description: Create Ingress for external access
-    default: false
+    default: true
   ingress.staticIpAddressName:
     type: string
     title: Google Cloud Static External IP

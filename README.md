@@ -241,8 +241,10 @@ If Calleido-Nifi is no longer running and there are extra constraints in the clu
 * Delete all instances of the constraint resource
 * Remove all finalizers on every CRD. If this is not something you want to do, the finalizers must be removed individually.
     ```bash
-    kubectl patch crd nificlusters.nifi.konpyutaika.com -p '{"metadata" : {"finalizers" : null }}' --type=merge
-    kubectl patch crd nifiusers.nifi.konpyutaika.com -p '{"metadata" : {"finalizers" : null }}' --type=merge
-    kubectl patch crd nifiusergroups.nifi.konpyutaika.com -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl get --no-headers nifiuser | awk '{print $1}' | xargs kubectl patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl get --no-headers nifiusergroup | awk '{print $1}' | xargs kubectl patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl delete mutatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
+    kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
     ```
 * Delete the `CRD`, `nificluster`, `nifiuser` and `nifiusergroup` resources associated with the unwanted constraint.

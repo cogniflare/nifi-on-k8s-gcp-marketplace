@@ -2,12 +2,12 @@ image:
   repo: null
   tag: null
 
-dnsName: test.nifikop.calleido.io # whitelisted in Nifi cluster
+dnsName: # whitelisted in Nifi cluster
 
 ingress:
   enabled: false
   # Google Cloud Static External IP Address Name
-  staticIpAddressName: nifikop
+  staticIpAddressName:
 
 admin:
   identity:
@@ -15,10 +15,11 @@ admin:
 
 oidc: # Google Cloud OAuth 2.0 Client ID for Web Application
   discoveryUrl: https://accounts.google.com/.well-known/openid-configuration
-  clientId: 229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com
-  secret: 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
+  clientId:
+  secret:
 
-nifiSensitivePropsKey: thisIsABadSensitiveKeyPassword # https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#security_properties
+# https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#security_properties
+nifiSensitivePropsKey:
 
 nifiNodes: 1
 

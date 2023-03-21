@@ -66,20 +66,22 @@ To release new version:
    gcloud config set project prj-d-sandbox-364708
    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
    
-   export TAG=0.0.17
+   export TAG=0.0.36
    
    # run automated tests
    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
    
    # run manual deployment
    kubectl create namespace test-nifi
-   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters='{"name": "test-nifi", "namespace": "test-nifi", "ingress.enabled": true}'
+   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com", "oidc.secret": "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", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
+   
+   # remove
+   kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
+   kubectl get --no-headers nifiuser | awk '{print $1}' | xargs kubectl patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge
+   kubectl get --no-headers nifiusergroup | awk '{print $1}' | xargs kubectl patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge
+   kubectl delete mutatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
+   kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
    kubectl delete applications.app.k8s.io test-nifi
+   kubectl delete namespace test-nifi
 ```
 
-## Manual cleanup in case of error
-```bash
-k patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge calleido
-k patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge  calleido-controller
-k patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge calleido.managed-admins
-```

@@ -7,7 +7,7 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 0.0.28
+TRACK ?= 0.0.36
 
 # SOURCE_REGISTRY ?= marketplace.gcr.io/google
 SOURCE_REGISTRY ?= eu.gcr.io/prj-cogniflare-marketpl-public
