@@ -36,7 +36,7 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 To release new version:
 1. Bump `TAG` in [Makefile](Makefile)
 2. Call `make release` to build and push images to GCR (dev)
-   For official release, call `make release-prd`
+   For official release, call: `PRD_RELEASE=true make release`
 
 ### Run tests on GCP
 
@@ -66,13 +66,16 @@ To release new version:
    export OAUTH_SECRET=$(gcloud secrets versions access latest --secret=OauthSecret)
    export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
 
-   export TAG=0.1.0
+   export TAG=1.0.0
    
-   # run automated tests
+   # run automated tests (DEV)
    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
+   # run automated tests (PRD)
+    /scripts/verify --deployer=eu.gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/deployer:${TAG}
    
    # run manual deployment
    kubectl create namespace test-nifi
+   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
    
    # remove

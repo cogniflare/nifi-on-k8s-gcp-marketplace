@@ -3,8 +3,10 @@ TAG := 1.0.0
 REGISTRY := gcr.io/prj-d-sandbox-364708
 PROJECT_ID := $(REGISTRY)/calleido-nifi
 
-release-prd: export REGISTRY=eu.gcr.io/prj-cogniflare-marketpl-public
-release-prd: export PROJECT_ID=$(REGISTRY)/calleido-nifi
+ifdef PRD_RELEASE
+	REGISTRY := eu.gcr.io/prj-cogniflare-marketpl-public
+    PROJECT_ID := $(REGISTRY)/calleido-nifi
+endif
 
 release-nifi-calleido:
 	@docker pull --platform linux/amd64 apache/nifi:1.20.0
@@ -12,8 +14,6 @@ release-nifi-calleido:
 	@docker push $(PROJECT_ID):$(TAG)
 
 release-deps:
-	@echo rrr $(REGISTRY)
-	@echo ppp $(PROJECT_ID)
 	# cert-manager-controller
 	@docker pull --platform linux/amd64 quay.io/jetstack/cert-manager-controller:v1.10.1
 	@docker tag quay.io/jetstack/cert-manager-controller:v1.10.1 $(PROJECT_ID)/cert-manager:$(TAG)
@@ -45,9 +45,6 @@ release-deployer:
         --tag $(PROJECT_ID)/deployer:$(TAG) -f ../deployer/Dockerfile ../
 
 release: release-deps release-nifi-calleido release-deployer release-tester
-	@sed -i '/TRACK ?=/c\TRACK ?= $(TAG)' ../Makefile
-
-release-prd: release-deps release-nifi-calleido release-deployer release-tester
 	@sed -i '/TRACK ?=/c\TRACK ?= $(TAG)' ../Makefile
 
 update-chart:
