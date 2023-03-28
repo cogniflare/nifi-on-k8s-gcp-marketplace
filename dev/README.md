@@ -64,6 +64,8 @@ To release new version:
    
    export OAUTH_ID=$(gcloud secrets versions access latest --secret=OauthClientID)
    export OAUTH_SECRET=$(gcloud secrets versions access latest --secret=OauthSecret)
+   export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
+
    export TAG=0.1.0
    
    # run automated tests
@@ -71,8 +73,7 @@ To release new version:
    
    # run manual deployment
    kubectl create namespace test-nifi
-   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} \
-     --parameters='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "$OAUTH_ID", "oidc.secret": "$OAUTH_SECRET", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
+   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
    
    # remove
    kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
@@ -83,4 +84,3 @@ To release new version:
    kubectl delete applications.app.k8s.io test-nifi
    kubectl delete namespace test-nifi
 ```
-
