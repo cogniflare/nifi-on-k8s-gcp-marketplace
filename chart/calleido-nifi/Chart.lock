@@ -1,0 +1,6 @@
+dependencies:
+- name: calleido-deps
+  repository: file://../calleido-deps
+  version: 0.1.1
+digest: sha256:fdca6b8f043fb6b3e903489e3b5234e26a7b28f31f0969ce603e494989ca7310
+generated: "2022-12-24T00:43:14.924472+01:00"

@@ -1,8 +1,0 @@
-nifi:
-  image:
-    repo: null
-    tag: null
-nifikop:
-  image:
-    repo: null
-    tag: null

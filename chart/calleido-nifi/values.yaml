@@ -1,4 +1,142 @@
-autoscaling:
-  enabled: false
+image:
+  repo: null
+  tag: null
+
+dnsName: # whitelisted in Nifi cluster
+
 ingress:
   enabled: false
+  # Google Cloud Static External IP Address Name
+  staticIpAddressName:
+
+admin:
+  identity:
+  name:
+
+oidc: # Google Cloud OAuth 2.0 Client ID for Web Application
+  discoveryUrl: https://accounts.google.com/.well-known/openid-configuration
+  clientId:
+  secret:
+
+# https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#security_properties
+nifiSensitivePropsKey:
+
+nifiNodes: 1
+
+resources:
+  limits:
+    cpu: 750m
+    memory: 2Gi
+    storage: 4Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi
+    storage: 4Gi
+
+persistence:
+  logs:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/nifi-current/logs"
+  data:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/data"
+  flowFileRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/flowfile_repository"
+  conf:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/nifi-current/conf"
+  contentRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/content_repository"
+  provenanceRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/provenance_repository"
+  extensionsRepo:
+    storageClass: standard-rwo
+    size: 1Gi
+    path: "/opt/nifi/extensions"
+
+calleido-deps:
+  cert-manager:
+    installCRDs: false
+    image:
+      repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-controller
+      tag: v1.10.1
+    extraArgs:
+      - --namespace=calleido
+    replicaCount: 1
+    global:
+      leaderElection:
+        namespace: calleido
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+    webhook:
+      resources:
+        limits:
+          cpu: 50m
+          memory: 32Mi
+        requests:
+          cpu: 50m
+          memory: 32Mi
+      image:
+        repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-webhook
+        tag: v1.10.1
+    cainjector:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      image:
+        repository: eu.gcr.io/prj-cogniflare-marketpl-public/cert-manager/cert-manager-cainjector
+        tag: v1.10.1
+    startupapicheck:
+      enabled: false
+
+  nifikop:
+    image:
+      repository: eu.gcr.io/prj-cogniflare-marketpl-public/nifikop/nifikop
+      tag: 1.0.0-cogniflare0
+    namespaces:
+      - calleido
+    logLevel: Debug
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+  zookeeper:
+    replicaCount: 1
+    image:
+      registry: eu.gcr.io
+      repository: prj-cogniflare-marketpl-public/zookeeper/zookeeper
+      tag: 3.8.0-debian-11-r56
+    persistence:
+      storageClass: standard-rwo
+      size: 8Gi
+    networkPolicy:
+      enabled: true
+    resources:
+      limits:
+        cpu: 250m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi

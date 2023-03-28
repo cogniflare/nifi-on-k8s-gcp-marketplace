@@ -1,0 +1,11 @@
+{{- /* https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs */}}
+{{- /* https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs */}}
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  domains:
+    - {{ .Values.dnsName }}
+{{- end }}

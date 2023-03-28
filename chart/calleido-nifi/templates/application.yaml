@@ -1,0 +1,67 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    kubernetes-engine.cloud.google.com/icon: >-
+      data:image/png;base64,{{ .Files.Get "logo.png" | b64enc }}
+    marketplace.cloud.google.com/deploy-info: '{"partner_id": "Cogniflare", "product_id": "NiFi", "partner_name": "Cogniflare"}'
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  descriptor:
+    type: NiFi
+    version: "{{ .Values.image.tag }}"
+    description: |-
+      Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+    maintainers:
+    - name: Cogniflare
+      url: https://www.cogniflare.io/
+    links:
+    - description: Getting Started
+      url: https://nifi.apache.org/docs/nifi-docs/html/getting-started.html
+    notes: |-
+      Explore all Cogniflare services [here](https://www.cogniflare.io/cogniflare-products/).
+  info:
+  - name: Application Namespace
+    value: {{ .Release.Namespace }}
+  selector:
+    matchExpressions:
+      - key: "app.kubernetes.io/name"
+        operator: "In"
+        values:
+          - "{{ .Release.Name }}"
+          - "webhook"
+          - "cainjector"
+          - "cert-manager"
+  componentKinds:
+    - group: nifi.konpyutaika.com/v1
+      kind: NifiCluster
+    - group: apps/v1
+      kind: Deployment
+    - group: apps/v1
+      kind: StatefulSet
+    - group: v1
+      kind: ConfigMap
+    - group: v1
+      kind: Secret
+    - group: v1
+      kind: ServiceAccount
+    - group: v1
+      kind: Job
+    - group: v1
+      kind: Service
+    - group: rbac.authorization.k8s.io/v1
+      kind: Role
+    - group: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+    - group: rbac.authorization.k8s.io/v1
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+    - group: admissionregistration.k8s.io/v1
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io/v1
+      kind: ValidatingWebhookConfiguration
+    - group: networking.gke.io/v1
+      kind: ManagedCertificate
