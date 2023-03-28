@@ -16,39 +16,38 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         image.tag:
           type: TAG
-#    TODO: uncomment me on release (all images needs to be republished with same $TAG)
-#    cert-manager:
-#      properties:
-#        calleido-deps.cert-manager.image.repository:
-#          type: REPO_WITH_REGISTRY
-#        calleido-deps.cert-manager.image.tag:
-#          type: TAG
-#    cert-manager-webhook:
-#      properties:
-#        calleido-deps.cert-manager.webhook.image.repository:
-#          type: REPO_WITH_REGISTRY
-#        calleido-deps.cert-manager.webhook.image.tag:
-#          type: TAG
-#    cert-manager-cainjector:
-#      properties:
-#        calleido-deps.cert-manager.cainjector.image.repository:
-#          type: REPO_WITH_REGISTRY
-#        calleido-deps.cert-manager.cainjector.image.tag:
-#          type: TAG
-#    nifikop:
-#      properties:
-#        calleido-deps.nifikop.image.repository:
-#          type: REPO_WITH_REGISTRY
-#        calleido-deps.nifikop.image.tag:
-#          type: TAG
-#    zookeeper:
-#      properties:
-#        calleido-deps.zookeeper.image.registry:
-#          type: REGISTRY
-#        calleido-deps.zookeeper.image.repository:
-#          type: REPO_WITHOUT_REGISTRY
-#        calleido-deps.zookeeper.image.tag:
-#          type: TAG
+    cert-manager:
+      properties:
+        calleido-deps.cert-manager.image.repository:
+          type: REPO_WITH_REGISTRY
+        calleido-deps.cert-manager.image.tag:
+          type: TAG
+    cert-manager-webhook:
+      properties:
+        calleido-deps.cert-manager.webhook.image.repository:
+          type: REPO_WITH_REGISTRY
+        calleido-deps.cert-manager.webhook.image.tag:
+          type: TAG
+    cert-manager-cainjector:
+      properties:
+        calleido-deps.cert-manager.cainjector.image.repository:
+          type: REPO_WITH_REGISTRY
+        calleido-deps.cert-manager.cainjector.image.tag:
+          type: TAG
+    nifikop:
+      properties:
+        calleido-deps.nifikop.image.repository:
+          type: REPO_WITH_REGISTRY
+        calleido-deps.nifikop.image.tag:
+          type: TAG
+    zookeeper:
+      properties:
+        calleido-deps.zookeeper.image.registry:
+          type: REGISTRY
+        calleido-deps.zookeeper.image.repository:
+          type: REPO_WITHOUT_REGISTRY
+        calleido-deps.zookeeper.image.tag:
+          type: TAG
 
   deployerServiceAccount:
     description: Creates app resources, including Webhooks and ClusterRoleBindings.

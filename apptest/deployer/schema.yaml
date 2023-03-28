@@ -1,7 +1,7 @@
 properties:
   testerImage:
     type: string
-    default: $REGISTRY/tester:$TAG
+    default: $REPO_WITH_REGISTRY/tester:$TAG
     x-google-property:
       type: IMAGE
   ingress.enabled:

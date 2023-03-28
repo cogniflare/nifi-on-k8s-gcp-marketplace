@@ -7,18 +7,18 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 0.0.36
+TRACK ?= 0.1.2
 
 # SOURCE_REGISTRY ?= marketplace.gcr.io/google
 SOURCE_REGISTRY ?= eu.gcr.io/prj-cogniflare-marketpl-public
 
 # Main image HAS TO BE published always under $SOURCE_REGISTRY/$CHART_NAME
 IMAGE_CALLEIDO_NIFI ?= $(SOURCE_REGISTRY)/calleido-nifi:$(TRACK)
-IMAGE_CERT_MANAGER ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-controller:$(TRACK)
-IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-webhook:$(TRACK)
-IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager/cert-manager-cainjector:$(TRACK)
-IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/calleido-nifi/nifikop/nifikop:$(TRACK)
-IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/calleido-nifi/zookeeper/zookeeper:$(TRACK)
+IMAGE_CERT_MANAGER ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager:$(TRACK)
+IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager-webhook:$(TRACK)
+IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager-cainjector:$(TRACK)
+IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/calleido-nifi/nifikop:$(TRACK)
+IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/calleido-nifi/zookeeper:$(TRACK)
 
 # Main image
 image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_CALLEIDO_NIFI))
