@@ -76,11 +76,12 @@ To release new version:
    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
    
    # remove
+   kubectl delete applications.app.k8s.io test-nifi
+   
    kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
    kubectl get --no-headers nifiuser | awk '{print $1}' | xargs kubectl patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge
    kubectl get --no-headers nifiusergroup | awk '{print $1}' | xargs kubectl patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge
    kubectl delete mutatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
    kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
-   kubectl delete applications.app.k8s.io test-nifi
    kubectl delete namespace test-nifi
 ```
