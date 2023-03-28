@@ -1,7 +1,7 @@
 properties:
   testerImage:
     type: string
-    default: $REPO_WITH_REGISTRY/tester:$TAG
+    default: $REGISTRY/calleido-nifi/tester:$TAG
     x-google-property:
       type: IMAGE
   ingress.enabled:

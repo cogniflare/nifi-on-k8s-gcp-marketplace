@@ -134,21 +134,21 @@ Alternatively you can use short tag which points to the latest image for selecte
 > Warning: this tag is not stable and referenced image might change over time.
 
 ```shell
-export TAG="1.0"
+export TAG="1.0.0"
 ```
 
 Configure the container images:
 
 ```shell
-export IMAGE_HOST="marketplace.gcr.io"
-export IMAGE_REGISTRY="${IMAGE_HOST}/google"
+export IMAGE_HOST="eu.gcr.io"
+export IMAGE_REGISTRY="${IMAGE_HOST}/prj-cogniflare-marketpl-public"
 
 export IMAGE_CALLEIDO_NIFI="${IMAGE_REGISTRY}/calleido-nifi"
-export IMAGE_CERT_MANAGER="${IMAGE_CALLEIDO_NIFI}/cert-manager/cert-manager-controller"
-export IMAGE_CERT_MANAGER_WEBHOOK="${IMAGE_CALLEIDO_NIFI}/cert-manager/cert-manager-webhook"
-export IMAGE_CERT_MANAGER_CAINJECTOR="${IMAGE_CALLEIDO_NIFI}/cert-manager/cert-manager-cainjector"
-export IMAGE_NIFIKOP="${IMAGE_CALLEIDO_NIFI}/nifikop/nifikop"
-export IMAGE_ZOOKEEPER="/google/calleido-nifi/zookeeper/zookeeper"
+export IMAGE_CERT_MANAGER="${IMAGE_CALLEIDO_NIFI}/cert-manager"
+export IMAGE_CERT_MANAGER_WEBHOOK="${IMAGE_CALLEIDO_NIFI}/cert-manager-webhook"
+export IMAGE_CERT_MANAGER_CAINJECTOR="${IMAGE_CALLEIDO_NIFI}/cert-manager-cainjector"
+export IMAGE_NIFIKOP="${IMAGE_CALLEIDO_NIFI}/nifikop"
+export IMAGE_ZOOKEEPER="/prj-cogniflare-marketpl-public/calleido-nifi/zookeeper"
 ```
 
 Set or OIDC passwords:
