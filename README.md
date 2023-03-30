@@ -62,6 +62,34 @@ Configure `kubectl` to connect to the new cluster.
 gcloud container clusters get-credentials "$CLUSTER" --zone "$ZONE"
 ```
 
+#### Set up DNS and static IP address
+
+Follow below steps to expose the Nifi cluster.
+
+1. Reserve a static global external IP address.
+https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address
+
+2. Add a DNS record of type A with the above IP address (e.g. test.calleido.io).
+https://cloud.google.com/dns/docs/records#add_a_record
+
+3. Copy created DNS hostname and static IP address name to Calleido settings.
+
+#### Set up Google OAuth 2.0
+
+Nifi cluster uses Google OAuth 2.0 for user authentication.
+
+Follow below steps to set it up.
+
+1. Set up OAuth 2.0 https://support.google.com/cloud/answer/6158849
+
+2. Add authorised origin same as the hostname set up in the DNS A record (e.g. https://test.calleido.io).
+
+3. Add authorised redirect URIs for login and logout callbacks for below endpoints:
+- /nifi-api/access/oidc/callback (e.g. https://test.calleido.io/nifi-api/access/oidc/callback)
+- /nifi-api/access/oidc/logoutCallback (e.g. https://test.nifikop.calleido.io:443/nifi-api/access/oidc/logoutCallback)
+
+4. Copy Client ID and Client secret to Calleido settings.
+
 #### Clone this repo
 
 Clone this repo and the associated tools repo:
@@ -151,10 +179,23 @@ export IMAGE_NIFIKOP="${IMAGE_CALLEIDO_NIFI}/nifikop"
 export IMAGE_ZOOKEEPER="/prj-cogniflare-marketpl-public/calleido-nifi/zookeeper"
 ```
 
-Set or OIDC passwords:
+Set DNS name:
 
 ```shell
-export OIDC_PASSWORD="xxx"
+export DNS_NAME="your.domain.com"
+```
+
+Set OIDC credentials:
+
+```shell
+export OIDC_CLIENTID="xxx"
+export OIDC_SECRET="xxx"
+```
+
+If you want to expose the Nifi cluster, set up the Google External global static IP address name:
+
+```shell
+export STATIC_IP_NAME="externalIpName"
 ```
 
 #### Create namespace in your Kubernetes cluster
@@ -195,6 +236,11 @@ helm template "${APP_INSTANCE_NAME}" chart/argo-workflows \
     --set persistence.contentRepo.storageClass="${ZOOKEPER_PERSISTENT_DISK_SIZE}" \
     --set persistence.provenanceRepo.storageClass="${ZOOKEPER_PERSISTENT_DISK_SIZE}" \
     --set persistence.extensionsRepo.storageClass="${ZOOKEPER_PERSISTENT_DISK_SIZE}" \
+    --set dnsName="${DNS_NAME}" \
+    --set oidc.clientId="${OIDC_CLIENTID}" \
+    --set oidc.secret="${OIDC_SECRET}" \
+    --set ingress.enabled="true" \
+    --set ingress.staticIpAddressName="${STATIC_IP_NAME}" \
     > "${APP_INSTANCE_NAME}_manifest.yaml"
 ```
 
