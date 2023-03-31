@@ -1,14 +1,18 @@
 # Overview
 
-Calleido-Nifi is basically NiFi on Kubernetes. 
+Calleido-Nifi is basically NiFi on Kubernetes.
 
-Nifi is a tool that allows users to collect, process, and distribute data between systems. 
-It provides a web-based interface that enables users to design and manage data flows in a visual manner, 
+Nifi is a tool that allows users to collect, process, and distribute data between systems.
+It provides a web-based interface that enables users to design and manage data flows in a visual manner,
 using drag-and-drop components.
 
 ## About Google Click to Deploy
 
 Popular open stacks on Kubernetes packaged by Google.
+
+## Architecture
+
+![Architecture diagram](resources/calleido-k8s-app-architecture.png)
 
 # Installation
 
