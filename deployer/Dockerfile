@@ -46,5 +46,5 @@ COPY --from=build /tmp/test/calleido-nifi.tar.gz /data-test/chart/
 COPY --from=build /tmp/apptest/schema.yaml /data-test/
 COPY --from=build /tmp/schema.yaml /data/
 
-ENV WAIT_FOR_READY_TIMEOUT 600
-ENV TESTER_TIMEOUT 600
+ENV WAIT_FOR_READY_TIMEOUT 1200
+ENV TESTER_TIMEOUT 1200

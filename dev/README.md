@@ -53,38 +53,38 @@ To release new version:
 ### On ARM64 CPU
 `mpdev` is not available for ARM64 CPU, so we need to run tests in docker container manually:
 ```bash
-   docker run --platform linux/amd64 --init --net=host \
-   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly \
-   --mount type=bind,source=$(pwd)/log,target=/logs \
-   -it --rm gcr.io/cloud-marketplace-tools/k8s/dev:latest bash
-   
-   gcloud auth login
-   gcloud config set project prj-d-sandbox-364708
-   gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
-   
-   export OAUTH_ID=$(gcloud secrets versions access latest --secret=OauthClientID)
-   export OAUTH_SECRET=$(gcloud secrets versions access latest --secret=OauthSecret)
-   export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
-
-   export TAG=1.0.0
-   
-   # run automated tests (DEV)
-   /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
-   # run automated tests (PRD)
-    /scripts/verify --deployer=eu.gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/deployer:${TAG}
-   
-   # run manual deployment
-   kubectl create namespace test-nifi
-   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
-   /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
-   
-   # remove
-   kubectl delete applications.app.k8s.io test-nifi
-   
-   kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
-   kubectl get --no-headers nifiuser | awk '{print $1}' | xargs kubectl patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge
-   kubectl get --no-headers nifiusergroup | awk '{print $1}' | xargs kubectl patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge
-   kubectl delete mutatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
-   kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
-   kubectl delete namespace test-nifi
+    docker run --platform linux/amd64 --init --net=host \
+    --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly \
+    --mount type=bind,source=$(pwd)/log,target=/logs \
+    -it --rm gcr.io/cloud-marketplace-tools/k8s/dev:latest bash
+    
+    gcloud auth login
+    gcloud config set project prj-d-sandbox-364708
+    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
+    
+    export OAUTH_ID=$(gcloud secrets versions access latest --secret=OauthClientID)
+    export OAUTH_SECRET=$(gcloud secrets versions access latest --secret=OauthSecret)
+    export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
+    
+    export TAG=1.3
+    
+    # run automated tests (DEV)
+    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
+    # run automated tests (PRD)
+    /scripts/verify --deployer=gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/deployer:${TAG}
+    
+    # run manual deployment
+    kubectl create namespace test-nifi
+    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
+    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
+    
+    # remove
+    kubectl delete applications.app.k8s.io test-nifi
+    
+    kubectl get --no-headers nificluster | awk '{print $1}' | xargs kubectl patch nificluster -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl get --no-headers nifiuser | awk '{print $1}' | xargs kubectl patch nifiuser -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl get --no-headers nifiusergroup | awk '{print $1}' | xargs kubectl patch nifiusergroup -p '{"metadata" : {"finalizers" : null }}' --type=merge
+    kubectl delete mutatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
+    kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
+    kubectl delete namespace test-nifi
 ```
