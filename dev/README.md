@@ -58,25 +58,26 @@ To release new version:
     --mount type=bind,source=$(pwd)/log,target=/logs \
     -it --rm gcr.io/cloud-marketplace-tools/k8s/dev:latest bash
     
-    gcloud auth login
-    gcloud config set project prj-d-sandbox-364708
-    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project prj-d-sandbox-364708
+    #export PROJECT=prj-cogniflare-marketpl-public
+    export PROJECT=prj-d-sandbox-364708
     
-    export OAUTH_ID=$(gcloud secrets versions access latest --secret=OauthClientID)
-    export OAUTH_SECRET=$(gcloud secrets versions access latest --secret=OauthSecret)
+    gcloud auth login
+    gcloud config set project $PROJECT
+    gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project $PROJECT
+    
+    export OAUTH_ID=$(gcloud --project prj-d-sandbox-364708 secrets versions access latest --secret=OauthClientID)
+    export OAUTH_SECRET=$(gcloud --project prj-d-sandbox-364708  secrets versions access latest --secret=OauthSecret)
     export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
     
     export TAG=1.3
     
-    # run automated tests (DEV)
-    /scripts/verify --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG}
-    # run automated tests (PRD)
-    /scripts/verify --deployer=gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/deployer:${TAG}
+    # run automated tests
+    /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}
     
     # run manual deployment
     kubectl create namespace test-nifi
-    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
-    /scripts/install --deployer=gcr.io/prj-d-sandbox-364708/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
+    kubectl config set-context --current --namespace=test-nifi
+    /scripts/install --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG} --parameters="$ARGS_JSON"
     
     # remove
     kubectl delete applications.app.k8s.io test-nifi
