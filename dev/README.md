@@ -29,7 +29,8 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 
 ### Requirements
 1. Setup K8s cluster and connect to it (use e2-standard-4 machine type with 1 node)
-2. Install Application CRD: `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
+2. Install Application CRD:
+   `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
 
 ### Release images
 
@@ -67,6 +68,12 @@ To release new version:
     
     export OAUTH_ID=$(gcloud --project prj-d-sandbox-364708 secrets versions access latest --secret=OauthClientID)
     export OAUTH_SECRET=$(gcloud --project prj-d-sandbox-364708  secrets versions access latest --secret=OauthSecret)
+    
+    $ sql=$(cat <<EOF
+SELECT foo, bar FROM db
+WHERE foo='baz'
+EOF
+)
     export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
     
     export TAG=1.3
