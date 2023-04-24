@@ -104,6 +104,10 @@ properties:
     type: string
     title: HTTPS host to whitelist
     description: HTTPS host from which you will be connecting to the Nifi
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
 
   nifiSensitivePropsKey:
     type: string
