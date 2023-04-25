@@ -68,6 +68,7 @@ To release new version:
     
     export OAUTH_ID=$(gcloud --project prj-d-sandbox-364708 secrets versions access latest --secret=OauthClientID)
     export OAUTH_SECRET=$(gcloud --project prj-d-sandbox-364708  secrets versions access latest --secret=OauthSecret)
+    export ARGS_JSON='{"reportingSecret": "gs://cloud-marketplace-tools/reporting_secrets/fake_reporting_secret.yaml", "name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
     
     $ sql=$(cat <<EOF
 SELECT foo, bar FROM db
@@ -76,7 +77,7 @@ EOF
 )
     export ARGS_JSON='{"name": "test-nifi", "namespace": "test-nifi", "admin.identity": "jakub@cogniflare.io", "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", "ingress.staticIpAddressName": "nifikop", "dnsName": "test.nifikop.calleido.io"}'
     
-    export TAG=1.3
+    export TAG=1.4
     
     # run automated tests
     /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}

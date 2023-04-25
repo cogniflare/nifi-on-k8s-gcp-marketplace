@@ -129,30 +129,41 @@ calleido-deps:
         value: /etc/ubbagent/config.yaml
       - name: AGENT_LOCAL_PORT
         value: "6080"
-      - name: AGENT_STATE_DIR
-        value: /var/lib/ubbagent
-      - name: AGENT_REPORT_DIR
-        value: /var/lib/ubbagent/reports
+#      - name: AGENT_STATE_DIR
+#        value: /data/ubbagent
       - name: AGENT_ENCODED_KEY
         valueFrom:
           secretKeyRef:
-            name: $reportingSecret
+            name: '{{ .Release.Name }}-reportingsecret'
             key: reporting-key
       - name: AGENT_CONSUMER_ID
         valueFrom:
           secretKeyRef:
-            name: $reportingSecret
+            name: '{{ .Release.Name }}-reportingsecret'
             key: consumer-id
       volumeMounts:
       - name: ubbagent-config
         mountPath: /etc/ubbagent
-      - name: ubbagent-state
-        mountPath: /var/lib/ubbagent
+#      - name: ubbagent-state
+#        mountPath: /data/ubbagent
     extraVolumes:
     - name: ubbagent-config
       configMap:
         name: '{{ template "nifikop.name" . }}-ubbagent-config'
+#    - name: ubbagent-state
+#      persistentVolumeClaim:
+#        claimName: '{{ template "nifikop.name" . }}-ubbagent-billing'
     extraDeploy:
+#    - apiVersion: v1
+#      kind: PersistentVolumeClaim
+#      metadata:
+#        name: '{{ template "nifikop.name" . }}-ubbagent-billing'
+#      spec:
+#        accessModes: [ReadWriteOnce]
+#        storageClassName: {{ .Values.zookeeper.persistence.storageClass }}
+#        resources:
+#          requests:
+#            storage: 2Gi
     - apiVersion: v1
       kind: ConfigMap
       metadata:
