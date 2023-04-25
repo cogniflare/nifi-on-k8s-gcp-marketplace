@@ -40,6 +40,9 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         calleido-deps.nifikop.image.tag:
           type: TAG
+    billing:
+        calleido-deps.nifikop.sidecars[0].image.repository:
+          type: FULL
     zookeeper:
       properties:
         calleido-deps.zookeeper.image.registry:
@@ -399,3 +402,8 @@ properties:
 required:
 - name
 - namespace
+- admin.identity
+- admin.name
+- oidc.clientId
+- oidc.secret
+- ingress.enabled
