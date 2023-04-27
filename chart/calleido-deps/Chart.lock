@@ -4,9 +4,9 @@ dependencies:
   version: v1.10.1
 - name: nifikop
   repository: oci://europe-west2-docker.pkg.dev/prj-cogniflare-marketpl-public/helm-charts
-  version: 1.0.0-calleido1
+  version: 1.0.0-calleido2
 - name: zookeeper
   repository: https://charts.bitnami.com/bitnami
   version: 10.2.5
-digest: sha256:54a9767fa699e9b9b4f3517d9f9c2a31fcb8f152b2ec4b49969ed91d4c6e9eac
-generated: "2023-04-24T13:00:29.172104+02:00"
+digest: sha256:0782276fc66aac2b1b7a7f89bca8742662539fe60bf1fad67a4762d133ae32ad
+generated: "2023-04-27T09:47:04.844071+02:00"

@@ -8,7 +8,7 @@ dependencies:
     version: v1.10.1
     repository: https://charts.jetstack.io
   - name: nifikop
-    version: 1.0.0-calleido1
+    version: 1.0.0-calleido2
     repository: oci://europe-west2-docker.pkg.dev/prj-cogniflare-marketpl-public/helm-charts
   - name: zookeeper
     version: 10.2.5
