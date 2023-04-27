@@ -7,7 +7,7 @@ CHART_NAME := calleido-nifi
 APP_ID ?= $(CHART_NAME)
 VERIFY_WAIT_TIMEOUT = 1800
 
-TRACK ?= 1.3.0
+TRACK ?= 1.4.0
 
 # SOURCE_REGISTRY ?= marketplace.gcr.io/google
 SOURCE_REGISTRY ?= eu.gcr.io/prj-cogniflare-marketpl-public
@@ -19,12 +19,13 @@ IMAGE_CERT_MANAGER_WEBHOOK ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager-webh
 IMAGE_CERT_MANAGER_CAINJECTOR ?= $(SOURCE_REGISTRY)/calleido-nifi/cert-manager-cainjector:$(TRACK)
 IMAGE_NIFIKOP ?= $(SOURCE_REGISTRY)/calleido-nifi/nifikop:$(TRACK)
 IMAGE_ZOOKEEPER = $(SOURCE_REGISTRY)/calleido-nifi/zookeeper:$(TRACK)
+IMAGE_BILLING = $(SOURCE_REGISTRY)/calleido-nifi/ubbagent:$(TRACK)
 
 # Main image
 image-$(CHART_NAME) := $(call get_sha256,$(IMAGE_CALLEIDO_NIFI))
 
 # List of images used in application
-ADDITIONAL_IMAGES := cert-manager cert-manager-webhook cert-manager-cainjector nifikop zookeeper
+ADDITIONAL_IMAGES := cert-manager cert-manager-webhook cert-manager-cainjector nifikop zookeeper billing
 
 # Additional images variable names should correspond with ADDITIONAL_IMAGES list
 image-cert-manager :=  $(call get_sha256,$(IMAGE_CERT_MANAGER))
@@ -32,6 +33,7 @@ image-cert-manager-webhook := $(call get_sha256,$(IMAGE_CERT_MANAGER_WEBHOOK))
 image-cert-manager-cainjector := $(call get_sha256, $(IMAGE_CERT_MANAGER_CAINJECTOR))
 image-nifikop := $(call get_sha256, $(IMAGE_NIFIKOP))
 image-zookeeper := $(call get_sha256,$(IMAGE_ZOOKEEPER))
+image-billing := $(call get_sha256,$(IMAGE_BILLING))
 
 C2D_CONTAINER_RELEASE := $(call get_c2d_release,$(image-$(CHART_NAME)))
 

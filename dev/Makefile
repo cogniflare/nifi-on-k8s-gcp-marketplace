@@ -1,4 +1,4 @@
-TAG := 1.3
+TAG := 1.4
 TAG_MINOR := $(TAG).0
 
 REGISTRY := gcr.io/prj-d-sandbox-364708
@@ -47,6 +47,12 @@ release-deps:
 	@docker tag ghcr.io/konpyutaika/docker-images/nifikop:v1.1.0-release $(PROJECT_ID)/nifikop:$(TAG_MINOR)
 	@docker push $(PROJECT_ID)/nifikop:$(TAG)
 	@docker push $(PROJECT_ID)/nifikop:$(TAG_MINOR)
+	# billing - ubbagent
+	@docker pull --platform linux/amd64 gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1
+	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1 $(PROJECT_ID)/ubbagent:$(TAG)
+	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1 $(PROJECT_ID)/ubbagent:$(TAG_MINOR)
+	@docker push $(PROJECT_ID)/ubbagent:$(TAG)
+	@docker push $(PROJECT_ID)/ubbagent:$(TAG_MINOR)
 
 release-tester:
 	@docker buildx build --push --platform linux/amd64 \
@@ -59,7 +65,7 @@ release-deployer:
         --tag $(PROJECT_ID)/deployer:$(TAG) --tag $(PROJECT_ID)/deployer:$(TAG_MINOR) \
         -f ../deployer/Dockerfile ../
 
-release: release-deps release-nifi-calleido release-deployer release-tester
+release: update-chart release-deps release-nifi-calleido release-deployer release-tester
 	@sed -i '/TRACK ?=/c\TRACK ?= $(TAG_MINOR)' ../Makefile
 
 update-chart:

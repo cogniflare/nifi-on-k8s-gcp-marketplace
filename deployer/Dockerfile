@@ -34,10 +34,12 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends dnsutils netcat \
     && rm -rf /var/lib/apt/lists/*
 
+# wait for CRDs to be ready
 RUN sed '/^kubectl apply/ikubectl apply -f /data/extracted/calleido-nifi/chart/crds/\n\
     kubectl wait --for=condition=Established --timeout=15s crd clusterissuers.cert-manager.io\n\
     kubectl wait --for=condition=Established --timeout=15s crd nificlusters.nifi.konpyutaika.com' -i /bin/deploy.sh /bin/deploy_with_tests.sh
 
+# fix helm install
 RUN sed '/--namespace="$NAMESPACE"/c\    --namespace="$NAMESPACE" --set-string calleido-deps.nifikop.namespaces={"$NAMESPACE"} --set-string calleido-deps.cert-manager.global.leaderElection.namespace="$NAMESPACE" --set-string calleido-deps.cert-manager.extraArgs={--namespace="$NAMESPACE"} \\' -i /bin/create_manifests.sh
 
 

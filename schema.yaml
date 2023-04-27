@@ -40,6 +40,9 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         calleido-deps.nifikop.image.tag:
           type: TAG
+    billing:
+        calleido-deps.nifikop.bilingSidecarImage:
+          type: FULL
     zookeeper:
       properties:
         calleido-deps.zookeeper.image.registry:
@@ -104,6 +107,11 @@ properties:
     type: string
     title: HTTPS host to whitelist
     description: HTTPS host from which you will be connecting to the Nifi
+
+  calleido-deps.nifikop.reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
 
   nifiSensitivePropsKey:
     type: string
@@ -395,3 +403,8 @@ properties:
 required:
 - name
 - namespace
+- admin.identity
+- admin.name
+- oidc.clientId
+- oidc.secret
+- ingress.enabled
