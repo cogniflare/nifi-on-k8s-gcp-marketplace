@@ -75,14 +75,14 @@ To release new version:
 "name": "test-nifi",
 "namespace": "test-nifi",
 "admin.identity": "jakub@cogniflare.io",
-"oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'", 
+"oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'",
 "ingress.staticIpAddressName": "nifikop", 
 "dnsName": "test.nifikop.calleido.io"
 }
 EOF
 )
     
-    export TAG=1.4
+    export TAG=1.5.0
     
     # run automated tests
     /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}

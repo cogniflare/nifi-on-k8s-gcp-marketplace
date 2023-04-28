@@ -109,7 +109,7 @@ calleido-deps:
 
   nifikop:
     reportingSecret: "nifikop-reporting-secret"
-    bilingSidecarImage: gcr.io/cloud-marketplace-tools/metering/ubbagent:latest
+    bilingSidecarImage: "gcr.io/cloud-marketplace-tools/metering/ubbagent:latest"
     image:
       repository: eu.gcr.io/prj-cogniflare-marketpl-public/nifikop/nifikop
       tag: 1.0.0-cogniflare0

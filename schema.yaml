@@ -40,7 +40,8 @@ x-google-marketplace:
           type: REPO_WITH_REGISTRY
         calleido-deps.nifikop.image.tag:
           type: TAG
-    billing:
+    ubbagent:
+      properties:
         calleido-deps.nifikop.bilingSidecarImage:
           type: FULL
     zookeeper:
