@@ -1,4 +1,4 @@
-TAG := 1.5
+TAG := 1.6
 TAG_MINOR := $(TAG).0
 
 REGISTRY := gcr.io/prj-d-sandbox-364708
@@ -36,9 +36,9 @@ release-deps:
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG)
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG_MINOR)
 	# zookeeper
-	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.1-debian-11-r17
-	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r17 $(PROJECT_ID)/zookeeper:$(TAG)
-	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r17 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
+	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.1-debian-11-r28
+	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r28 $(PROJECT_ID)/zookeeper:$(TAG)
+	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r28 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	# nifikop operator
@@ -48,9 +48,9 @@ release-deps:
 	@docker push $(PROJECT_ID)/nifikop:$(TAG)
 	@docker push $(PROJECT_ID)/nifikop:$(TAG_MINOR)
 	# billing - ubbagent
-	@docker pull --platform linux/amd64 gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1
-	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1 $(PROJECT_ID)/ubbagent:$(TAG)
-	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.1 $(PROJECT_ID)/ubbagent:$(TAG_MINOR)
+	@docker pull --platform linux/amd64 gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.2
+	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.2 $(PROJECT_ID)/ubbagent:$(TAG)
+	@docker tag gcr.io/cloud-marketplace-tools/metering/ubbagent:0.1.2 $(PROJECT_ID)/ubbagent:$(TAG_MINOR)
 	@docker push $(PROJECT_ID)/ubbagent:$(TAG)
 	@docker push $(PROJECT_ID)/ubbagent:$(TAG_MINOR)
 
