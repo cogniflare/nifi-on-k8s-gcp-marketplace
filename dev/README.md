@@ -52,6 +52,13 @@ To release new version:
     ```
 
 ### On ARM64 CPU
+
+1. Ensure that `marketplace-test` StaticIP address exists in [GCP](https://console.cloud.google.com/networking/addresses/list?project=prj-cogniflare-marketpl-public)
+2. Ensure that DNS record exists in [GCP sandbox](https://console.cloud.google.com/net-services/dns/zones/nifikop/details?project=prj-d-sandbox-364708)
+   - `marketplace.nifikop.calleido.io.` for `prj-cogniflare-marketpl-public` project
+   - `test-dev.nifikop.calleido.io.` for `prj-d-sandbox-364708` project
+3. Ensure that your DNS address ic configured in OIDC client in [GCP](https://console.cloud.google.com/apis/credentials/oauthclient/229459469551-7q6uunqocmn9juhg33jcg4vvpcsqf3ug.apps.googleusercontent.com?project=prj-d-sandbox-364708)
+
 `mpdev` is not available for ARM64 CPU, so we need to run tests in docker container manually:
 ```bash
     docker run --platform linux/amd64 --init --net=host \
@@ -76,8 +83,8 @@ To release new version:
 "namespace": "test-nifi",
 "admin.identity": "jakub@cogniflare.io",
 "oidc.clientId": "'${OAUTH_ID}'", "oidc.secret": "'${OAUTH_SECRET}'",
-"ingress.staticIpAddressName": "nifikop", 
-"dnsName": "test.nifikop.calleido.io"
+"ingress.staticIpAddressName": "marketplace-test", 
+"dnsName": "test-dev.nifikop.calleido.io"
 }
 EOF
 )
@@ -102,3 +109,6 @@ EOF
     kubectl delete validatingwebhookconfigurations --selector  "app.kubernetes.io/name=webhook"
     kubectl delete namespace test-nifi
 ```
+
+### Debugging
+- Verify SSL cert state: https://console.cloud.google.com/security/ccm/list/lbCertificates
