@@ -343,7 +343,7 @@ properties:
     pattern: '^([+-]?[0-9.]+)([m]?)$'
   calleido-deps.zookeeper.resources.limits.memory:
     type: string
-    default: 256Mi
+    default: 1024Mi
     title: Memory limit for Zookeeper operator (dependency component)
     pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
   calleido-deps.zookeeper.resources.requests.cpu:
@@ -353,7 +353,7 @@ properties:
     pattern: '^([+-]?[0-9.]+)([m]?)$'
   calleido-deps.zookeeper.resources.requests.memory:
     type: string
-    default: 256Mi
+    default: 512Mi
     title: Memory requests for Zookeeper operator (dependency component)
     pattern: '^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$'
 
