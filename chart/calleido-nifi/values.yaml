@@ -260,7 +260,7 @@ calleido-deps:
               identity: gcp
               # The service name is unique to your application and will be
               # provided during onboarding.
-              serviceName: my-application.mp-my-company.appspot.com
+              serviceName: calleido.endpoints.prj-cogniflare-marketpl-public.cloud.goog
               consumerId: $AGENT_CONSUMER_ID  # From the reporting secret.
 
           # The sources section lists metric data sources run by the agent
