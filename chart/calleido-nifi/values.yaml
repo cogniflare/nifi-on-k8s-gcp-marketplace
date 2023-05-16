@@ -143,6 +143,9 @@ calleido-deps:
           secretKeyRef:
             name: '{{ .Values.reportingSecret }}'
             key: consumer-id
+      securityContext:
+        runAsUser: 0
+        allowPrivilegeEscalation: false
       volumeMounts:
       - name: ubbagent-config
         mountPath: /etc/ubbagent
