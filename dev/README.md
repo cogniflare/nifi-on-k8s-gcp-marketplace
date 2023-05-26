@@ -89,7 +89,7 @@ To release new version:
 EOF
 )
     
-    export TAG=1.11.0
+    export TAG=1.12.0
     
     # run automated tests
     /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}
