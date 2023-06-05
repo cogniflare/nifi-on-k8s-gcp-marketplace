@@ -191,7 +191,7 @@ calleido-deps:
           # The agent is able to automatically send instance time usage
           # reports, configured in the "source" section.
           - name: basic_vcpu_hour
-            type: int
+            type: double
             endpoints:
             - name: on_disk
             - name: servicecontrol
@@ -248,8 +248,7 @@ calleido-deps:
               metric: basic_vcpu_hour
               intervalSeconds: 60
               value:
-                int64Value: 60
-
+                doubleValue: 0.016666666666667
   zookeeper:
     replicaCount: 1
     image:
