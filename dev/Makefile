@@ -1,4 +1,4 @@
-TAG := 1.16
+TAG := 1.17
 TAG_MINOR := $(TAG).0
 
 REGISTRY := gcr.io/prj-d-sandbox-364708

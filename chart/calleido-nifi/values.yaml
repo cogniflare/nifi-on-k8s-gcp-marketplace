@@ -242,14 +242,13 @@ calleido-deps:
           # NOTE: 'intervalSeconds' should not be too short to avoid excessive
           # reporting; it should not be too long to avoid missing events in case of
           # unexpected restarts. The recommended value is 1 minute, or 60 seconds.
-           sources:
-           - name: instance_time_heartbeat
-             heartbeat:
-               metric: basic_vcpu_hour
-               intervalSeconds: 60
-               value:
-                 doubleValue: 0.016666666666667 # 1/60 of an hour
-
+          sources:
+          - name: instance_time_heartbeat
+            heartbeat:
+              metric: basic_vcpu_hour
+              intervalSeconds: 60
+              value:
+                doubleValue: 0.016666666666667
   zookeeper:
     replicaCount: 1
     image:
