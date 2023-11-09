@@ -41,7 +41,7 @@ To release new version:
 
 ### Run tests on GCP
 
-### On AMD64 CPU
+## On AMD64 CPU
 1. Test K8s config
     ```bash
     make test-doctor
@@ -51,7 +51,7 @@ To release new version:
     make test
     ```
 
-### On ARM64 CPU
+## On ARM64 CPU
 
 1. Ensure that `marketplace-test` StaticIP address exists in [GCP](https://console.cloud.google.com/networking/addresses/list?project=prj-cogniflare-marketpl-public)
 2. Ensure that DNS record exists in [GCP sandbox](https://console.cloud.google.com/net-services/dns/zones/nifikop/details?project=prj-d-sandbox-364708)
@@ -89,7 +89,7 @@ To release new version:
 EOF
 )
     
-    export TAG=1.17.0
+    export TAG=1.19.0
     
     # run automated tests
     /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}

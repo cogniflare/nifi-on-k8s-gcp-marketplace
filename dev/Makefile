@@ -1,4 +1,4 @@
-TAG := 1.17
+TAG := 1.19
 TAG_MINOR := $(TAG).0
 
 REGISTRY := gcr.io/prj-d-sandbox-364708
@@ -9,19 +9,22 @@ ifdef PRD_RELEASE
     PROJECT_ID := $(REGISTRY)/calleido-nifi
 endif
 
-#release-nifi-calleido:
-#	@docker pull --platform linux/amd64 apache/nifi:1.21.0
-#	@docker tag apache/nifi:1.21.0 $(PROJECT_ID):$(TAG)
-#	@docker tag apache/nifi:1.21.0 $(PROJECT_ID):$(TAG_MINOR)
-#	@docker push $(PROJECT_ID):$(TAG)
-#	@docker push $(PROJECT_ID):$(TAG_MINOR)
-
+# https://hub.docker.com/r/apache/nifi/tags
+# CVE-2016-1000027: https://issues.apache.org/jira/browse/NIFI-11703
 release-nifi-calleido:
-	@docker pull --platform linux/amd64 gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1
-	@docker tag gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1 $(PROJECT_ID):$(TAG)
-	@docker tag gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1 $(PROJECT_ID):$(TAG_MINOR)
+	@docker pull --platform linux/amd64 apache/nifi:1.23.0
+	@docker tag apache/nifi:1.23.0 $(PROJECT_ID):$(TAG)
+	@docker tag apache/nifi:1.23.0 $(PROJECT_ID):$(TAG_MINOR)
 	@docker push $(PROJECT_ID):$(TAG)
 	@docker push $(PROJECT_ID):$(TAG_MINOR)
+
+# custom build based on 1.21.0
+#release-nifi-calleido:
+#	@docker pull --platform linux/amd64 gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1
+#	@docker tag gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1 $(PROJECT_ID):$(TAG)
+#	@docker tag gcr.io/prj-cogniflare-marketpl-public/calleido-nifi/apache/nifi:1.21.0-amd64-cogniflare1 $(PROJECT_ID):$(TAG_MINOR)
+#	@docker push $(PROJECT_ID):$(TAG)
+#	@docker push $(PROJECT_ID):$(TAG_MINOR)
 
 release-deps:
 	# cert-manager-controller
@@ -43,9 +46,9 @@ release-deps:
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG)
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG_MINOR)
 	# zookeeper
-	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.1-debian-11-r28
-	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r28 $(PROJECT_ID)/zookeeper:$(TAG)
-	@docker tag docker.io/bitnami/zookeeper:3.8.1-debian-11-r28 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
+	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.3-debian-11-r1
+	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r1 $(PROJECT_ID)/zookeeper:$(TAG)
+	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r1 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	# nifikop operator
@@ -69,6 +72,7 @@ release-deployer:
 	@docker buildx build --push --platform linux/amd64 --build-arg MARKETPLACE_TOOLS_TAG=latest \
         --build-arg REGISTRY=$(REGISTRY) \
         --build-arg TAG=$(TAG_MINOR) \
+        --provenance=false \
         --tag $(PROJECT_ID)/deployer:$(TAG) --tag $(PROJECT_ID)/deployer:$(TAG_MINOR) \
         -f ../deployer/Dockerfile ../
 

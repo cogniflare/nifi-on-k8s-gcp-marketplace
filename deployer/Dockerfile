@@ -1,6 +1,6 @@
 ARG MARKETPLACE_TOOLS_TAG
 
-FROM marketplace.gcr.io/google/debian9 AS build
+FROM marketplace.gcr.io/google/c2d-debian11:latest AS build
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends gettext
@@ -30,9 +30,9 @@ RUN cat /tmp/apptest/schema.yaml \
 
 FROM gcr.io/cloud-marketplace-tools/k8s/deployer_helm:$MARKETPLACE_TOOLS_TAG
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends dnsutils netcat \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update \
+#    && apt-get install -y --no-install-recommends dnsutils netcat \
+#    && rm -rf /var/lib/apt/lists/*
 
 # wait for CRDs to be ready
 RUN sed '/^kubectl apply/ikubectl apply -f /data/extracted/calleido-nifi/chart/crds/\n\
