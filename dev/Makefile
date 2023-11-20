@@ -1,4 +1,4 @@
-TAG := 1.19
+TAG := 1.22
 TAG_MINOR := $(TAG).0
 
 REGISTRY := gcr.io/prj-d-sandbox-364708
@@ -12,9 +12,9 @@ endif
 # https://hub.docker.com/r/apache/nifi/tags
 # CVE-2016-1000027: https://issues.apache.org/jira/browse/NIFI-11703
 release-nifi-calleido:
-	@docker pull --platform linux/amd64 apache/nifi:1.23.0
-	@docker tag apache/nifi:1.23.0 $(PROJECT_ID):$(TAG)
-	@docker tag apache/nifi:1.23.0 $(PROJECT_ID):$(TAG_MINOR)
+	@docker pull --platform linux/amd64 apache/nifi:1.23.2
+	@docker tag apache/nifi:1.23.2 $(PROJECT_ID):$(TAG)
+	@docker tag apache/nifi:1.23.2 $(PROJECT_ID):$(TAG_MINOR)
 	@docker push $(PROJECT_ID):$(TAG)
 	@docker push $(PROJECT_ID):$(TAG_MINOR)
 
@@ -46,9 +46,9 @@ release-deps:
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG)
 	@docker push $(PROJECT_ID)/cert-manager-cainjector:$(TAG_MINOR)
 	# zookeeper
-	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.3-debian-11-r1
-	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r1 $(PROJECT_ID)/zookeeper:$(TAG)
-	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r1 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
+	@docker pull --platform linux/amd64 docker.io/bitnami/zookeeper:3.8.3-debian-11-r2
+	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r2 $(PROJECT_ID)/zookeeper:$(TAG)
+	@docker tag docker.io/bitnami/zookeeper:3.8.3-debian-11-r2 $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG)
 	@docker push $(PROJECT_ID)/zookeeper:$(TAG_MINOR)
 	# nifikop operator
