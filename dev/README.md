@@ -28,20 +28,27 @@ To overwrite default image from Makefile: `export IMAGE_NIFI=apache/nifi:1.12.1`
 ## Build & Test on GCP
 
 ### Requirements
-1. Setup K8s cluster and connect to it (use e2-standard-4 machine type with 1 node)
+1. Setup EKS cluster and connect to it: https://console.cloud.google.com/welcome?project=prj-d-sandbox-364708
+   - use `e2-standard-4 machine` Node type
+   - use 1 node
 2. Install Application CRD:
-   `kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"`
+   ```
+   kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/marketplace-k8s-app-tools/master/crd/app-crd.yaml"
+   ```
 
 ### Release images
 
-To release new version:
+To release a new version:
 1. Bump `TAG` in [Makefile](Makefile)
 2. Call `make release` to build and push images to GCR (dev)
    For official release, call: `PRD_RELEASE=true make release`
 
+In case of error: `missing content: content digest xxx not found` on `docker push` step, 
+disable `containerd` for pulling and storing images in Docker
+
 ### Run tests on GCP
 
-### On AMD64 CPU
+#### On AMD64 CPU
 1. Test K8s config
     ```bash
     make test-doctor
@@ -51,7 +58,7 @@ To release new version:
     make test
     ```
 
-### On ARM64 CPU
+#### On ARM64 CPU
 
 1. Ensure that `marketplace-test` StaticIP address exists in [GCP](https://console.cloud.google.com/networking/addresses/list?project=prj-cogniflare-marketpl-public)
 2. Ensure that DNS record exists in [GCP sandbox](https://console.cloud.google.com/net-services/dns/zones/nifikop/details?project=prj-d-sandbox-364708)
@@ -89,7 +96,7 @@ To release new version:
 EOF
 )
     
-    export TAG=1.17.0
+    export TAG=1.26.0
     
     # run automated tests
     /scripts/verify --deployer=gcr.io/$PROJECT/calleido-nifi/deployer:${TAG}
